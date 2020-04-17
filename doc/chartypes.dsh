@@ -1,0 +1,65 @@
+// slide "slategray" "white"
+	// 	dcleft=25 // left+7
+	// 	dcx=25 
+	// 	dcy=top-20
+	// 	dxskip=30
+	// 	dyskip=20
+	// 	dcsize=titlesize*0.75
+	// 	dcimx=dcx-5
+	// 	dcimy=dcy+2
+	// 	dcimw=120
+	// 	dcimh=120
+	// 	dcolor=datacolor
+
+	// 	ctext "dchart: deck/decksh charting" 50 top 7
+	// 	//text "Column" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-bar.png" dcimx dcimy dcimw dcimh
+	// 	dcx+=dxskip
+	// 	dcimx+=dxskip
+	// 	//text "Bar" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-hbar.png" dcimx dcimy dcimw dcimh
+	// 	dcx+=dxskip
+	// 	dcimx+=dxskip
+	// 	//text "Dot" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-dot.png" dcimx dcimy dcimw dcimh
+
+	// 	dcx=dcleft
+	// 	dcy-=dyskip
+	// 	dcimx=dcx-5
+	// 	dcimy-=dyskip
+
+	// 	//text "Line" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-line.png" dcimx dcimy dcimw dcimh
+	// 	dcx+=dxskip
+	// 	dcimx+=dxskip
+	// 	//text "Scatter" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-scatter.png" dcimx dcimy dcimw dcimh
+	// 	dcx+=dxskip
+	// 	dcimx+=dxskip
+	// 	//text "Area" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-area.png" dcimx dcimy dcimw dcimh
+		
+	// 	dcx=dcleft
+	// 	dcy-=dyskip
+	// 	dcimx=dcx-5
+	// 	dcimy-=dyskip
+		
+	// 	//text "Donut/Pie" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-donut.png" dcimx dcimy dcimw dcimh
+	// 	dcx+=dxskip
+	// 	dcimx+=dxskip
+	// 	//text "Radial" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-radial.png" dcimx dcimy dcimw dcimh
+	// 	dcx+=dxskip
+	// 	dcimx+=dxskip
+	// 	//text "Pmap" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-pmap.png" dcimx dcimy dcimw dcimh
+
+	// 	dcx=dcleft
+	// 	dcy-=dyskip
+	// 	dcimx=dcx-5
+	// 	dcimy-=dyskip
+
+	// 	//text "Waffle" dcx dcy dcsize "sans" dcolor
+	// 	image "images/invert-pgrid.png" dcimx dcimy dcimw dcimh
+	// eslide

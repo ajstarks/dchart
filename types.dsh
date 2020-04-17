@@ -1,0 +1,30 @@
+deck
+	opts="-fulldeck=f -xlabel=0 -color=maroon"
+	slide
+	dchart opts -bar=t -val=f          data/foo.d
+	eslide
+
+	slide
+	dchart opts -bar=f -val=f -line    data/foo.d
+	eslide
+
+	slide
+	dchart opts -bar=f -val=f -vol     data/foo.d
+	eslide
+
+	slide
+	dchart opts -bar=f -val=f -scatter data/foo.d
+	eslide
+
+	slide
+	dchart opts -bar=f -val=f -dot     data/foo.d
+	eslide
+
+	slide
+	dchart opts -hbar -val=f    data/foo.d
+	eslide
+
+	slide
+	dchart opts  -wbar -val=f    data/foo.d
+	eslide
+edeck

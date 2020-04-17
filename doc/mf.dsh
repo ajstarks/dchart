@@ -1,0 +1,10 @@
+deck
+	dim="-top=85 -bottom=65 -left=20 -right=80"
+	copt="-fulldeck=f -title=f -val=f -bar=f -line -vol"
+	slide
+		ctext "Composite Charts" 50 90 3
+		dchart copt dim -xlabel=10 -color orange cos.d
+		dchart copt dim -xlabel=0                sin.d
+		textcode "mf.dsh"  20 35 65 1.8
+	eslide
+edeck
