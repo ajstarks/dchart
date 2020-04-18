@@ -1238,6 +1238,11 @@ func (s *Settings) GenerateChart(deck *generate.Deck, r io.ReadCloser) {
 	}
 }
 
+// Write performs chart I/O
+func (s *Settings) Write(w io.Writer, r io.ReadCloser) {
+	s.GenerateChart(generate.NewSlides(w, 0, 0), r)
+}
+
 // NewFullChart initializes the settings required to make a chart
 // that includes the enclosing deck markup
 func NewFullChart(chartType string, top, bottom, left, right float64) Settings {
