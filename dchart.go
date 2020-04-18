@@ -927,18 +927,18 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 	ts := s.Measures.TextSize
 
 	datamin := s.Flags.DataMinimum
-	Showvolume := s.Flags.ShowVolume
-	Showrline := s.Flags.ShowRegressionLine
-	Showframe := s.Flags.ShowFrame
-	Showaxis := s.Flags.ShowAxis
-	Showline := s.Flags.ShowLine
-	Showdot := s.Flags.ShowDot
-	Showtitle := s.Flags.ShowTitle
-	Showpct := s.Flags.ShowPercentage
-	Showscatter := s.Flags.ShowScatter
-	Showbar := s.Flags.ShowBar
-	Showval := s.Flags.ShowValues
-	Shownote := s.Flags.ShowNote
+	showvolume := s.Flags.ShowVolume
+	showrline := s.Flags.ShowRegressionLine
+	showframe := s.Flags.ShowFrame
+	showaxis := s.Flags.ShowAxis
+	showline := s.Flags.ShowLine
+	showdot := s.Flags.ShowDot
+	showtitle := s.Flags.ShowTitle
+	showpct := s.Flags.ShowPercentage
+	showscatter := s.Flags.ShowScatter
+	showbar := s.Flags.ShowBar
+	showval := s.Flags.ShowValues
+	shownote := s.Flags.ShowNote
 
 	valuecolor := s.Attributes.ValueColor
 	valpos := s.Attributes.ValuePosition
@@ -976,7 +976,7 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 
 	// for volume plots, allocate, fill in the extrema
 	var xvol, yvol []float64
-	if Showvolume {
+	if showvolume {
 		xvol = make([]float64, l+2)
 		yvol = make([]float64, l+2)
 		xvol[0] = left
@@ -986,7 +986,7 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 	}
 
 	var xreg, yreg []float64
-	if Showrline {
+	if showrline {
 		xreg = make([]float64, l)
 		yreg = make([]float64, l)
 	}
@@ -1000,7 +1000,7 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 	}
 
 	// Show a frame if specified
-	if Showframe {
+	if showframe {
 		fw := right - left
 		fh := top - bottom
 		deck.Rect(left+(fw/2), bottom+(fh/2), fw, fh, framecolor, 5)
@@ -1011,11 +1011,11 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 		title = xmlesc(chartitle)
 	}
 
-	if len(title) > 0 && Showtitle {
+	if len(title) > 0 && showtitle {
 		deck.TextMid(left+((right-left)/2), top+(linespacing*1.5), title, "sans", spacing, Titlecolor)
 	}
 
-	if Showaxis {
+	if showaxis {
 		// yaxis(deck, left-spacing-(dw*0.5), mindata, maxdata)
 		s.yaxis(deck, left-spacing, mindata, maxdata)
 	}
@@ -1044,7 +1044,7 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 	}
 
 	var sum float64
-	if Showpct {
+	if showpct {
 		sum = datasum(chartdata)
 	}
 
@@ -1055,12 +1055,12 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 		x := vmap(float64(i), 0, dlen, left, right)
 		y := vmap(data.value, mindata, maxdata, bottom, top)
 
-		if Showvolume {
+		if showvolume {
 			xvol[i+1] = x
 			yvol[i+1] = y
 		}
 
-		if Showrline {
+		if showrline {
 			xreg[i] = float64(i)
 			yreg[i] = data.value
 		}
@@ -1072,24 +1072,24 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 				datacolor = defcolor
 			}
 		}
-		if Showline && i > 0 {
+		if showline && i > 0 {
 			deck.Line(px, py, x, y, linewidth, datacolor)
 		}
 
-		if Showdot {
+		if showdot {
 			dottedvline(deck, x, bottom, y, ts/6, 1, Dotlinecolor)
 			deck.Circle(x, y, ts*.6, datacolor)
 		}
 
-		if Showscatter {
+		if showscatter {
 			deck.Circle(x, y, ts*.6, datacolor)
 		}
 
-		if Showbar {
+		if showbar {
 			deck.Line(x, bottom, x, y, dw, datacolor)
 		}
 
-		if Showval {
+		if showval {
 			yv := y + ts
 			switch valpos {
 			case "t":
@@ -1104,14 +1104,14 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 				yv = y - ((y - bottom) / 2)
 			}
 			df := s.Attributes.DataFmt
-			if Showpct {
+			if showpct {
 				avgs := fmt.Sprintf(" ("+df+"%%)", 100*(data.value/sum))
 				deck.TextMid(x, yv, dformat(df, data.value)+avgs, "sans", ts*0.75, valuecolor)
 			} else {
 				deck.TextMid(x, yv, dformat(df, data.value), "sans", ts*0.75, valuecolor)
 			}
 		}
-		if len(data.note) > 0 && Shownote {
+		if len(data.note) > 0 && shownote {
 			xoffset := ts / 2
 			yoffset := ts / 2
 			notesize := ts * 0.75
@@ -1146,11 +1146,11 @@ func (s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser) {
 		px = x
 		py = y
 	}
-	if Showvolume {
+	if showvolume {
 		deck.Polygon(xvol, yvol, datacolor, s.Measures.VolumeOpacity)
 	}
 
-	if Showrline {
+	if showrline {
 		s.Measures.rline(deck, xreg, yreg, mindata, maxdata, s.Attributes.RegressionLineColor)
 	}
 
@@ -1194,7 +1194,11 @@ func slope(x, y []float64) (float64, float64) {
 
 // rline makes a regression line
 func (measures *Measures) rline(deck *generate.Deck, x, y []float64, mindata, maxdata float64, color string) {
-	top, bottom, left, right, lw := measures.Top, measures.Bottom, measures.Left, measures.Right, measures.LineWidth
+	top := measures.Top
+	left := measures.Left
+	bottom := measures.Bottom
+	right := measures.Right
+	lw := measures.LineWidth
 	m, b := slope(x, y)
 	dl := len(x) - 1
 	l := float64(dl)
@@ -1225,4 +1229,52 @@ func (s *Settings) GenerateChart(deck *generate.Deck, r io.ReadCloser) {
 	default:
 		s.Vchart(deck, r)
 	}
+}
+
+// NewFullChart initializes the settings required to make a chart
+// that includes the enclosing deck markup
+func NewFullChart(chartType string, top, bottom, left, right float64) Settings {
+	s := NewChart(chartType, top, bottom, left, right)
+	s.Flags.FullDeck = true
+	return s
+}
+
+// NewChart initializes the settings required to make a chart
+func NewChart(chartType string, top, bottom, left, right float64) Settings {
+	var s Settings
+
+	switch chartType {
+	case "bar":
+		s.Flags.ShowBar = true
+	case "wbar":
+		s.Flags.ShowWBar = true
+	case "hbar":
+		s.Flags.ShowHBar = true
+	case "line":
+		s.Flags.ShowLine = true
+	}
+	if left == 0 {
+		left = 10
+	}
+	if right == 0 {
+		right = 90
+	}
+	if top == 0 {
+		top = 90
+	}
+	if bottom == 0 {
+		bottom = 30
+	}
+	s.Measures.Left = left
+	s.Measures.Right = right
+	s.Measures.Top = top
+	s.Measures.Bottom = bottom
+	s.Measures.XLabelInterval = 1
+	s.Measures.TextSize = 1.5
+	s.Measures.LineSpacing = 2.4
+	s.Attributes.BackgroundColor = "white"
+	s.Attributes.DataColor = "lightsteelblue"
+	s.Attributes.LabelColor = "rgb(75,75,75)"
+
+	return s
 }
