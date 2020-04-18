@@ -343,11 +343,15 @@ func (s *Settings) yaxis(deck *generate.Deck, x, dmin, dmax float64) {
 	if step < 1 {
 		axisfmt = "%3.2f"
 	}
+	left := s.Measures.Left
+	if left < 0 {
+		left = 10.0
+	}
 	for y := axismin; y <= axismax; y += step {
 		yp := vmap(y, dmin, dmax, s.Measures.Bottom, s.Measures.Top)
 		deck.TextEnd(x, yp, fmt.Sprintf(axisfmt, y), "sans", s.Measures.TextSize*0.75, s.Attributes.LabelColor)
 		if s.Flags.ShowGrid {
-			deck.Line(s.Measures.Left, yp, s.Measures.Right, yp, 0.1, "lightgray")
+			deck.Line(left, yp, s.Measures.Right, yp, 0.1, "lightgray")
 		}
 	}
 }
@@ -1196,6 +1200,9 @@ func slope(x, y []float64) (float64, float64) {
 func (measures *Measures) rline(deck *generate.Deck, x, y []float64, mindata, maxdata float64, color string) {
 	top := measures.Top
 	left := measures.Left
+	if left < 0 {
+		left = 10.0
+	}
 	bottom := measures.Bottom
 	right := measures.Right
 	lw := measures.LineWidth
@@ -1253,16 +1260,16 @@ func NewChart(chartType string, top, bottom, left, right float64) Settings {
 	case "line":
 		s.Flags.ShowLine = true
 	}
-	if left == 0 {
+	if left <= 0 {
 		left = 10
 	}
-	if right == 0 {
+	if right <= 0 {
 		right = 90
 	}
-	if top == 0 {
+	if top <= 0 {
 		top = 90
 	}
-	if bottom == 0 {
+	if bottom <= 0 {
 		bottom = 30
 	}
 	s.Measures.Left = left

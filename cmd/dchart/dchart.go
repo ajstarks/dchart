@@ -15,7 +15,7 @@ func cmdflags() dchart.Settings {
 
 	// Measures
 	flag.Float64Var(&chart.Measures.TextSize, "textsize", 1.5, "text size")
-	flag.Float64Var(&chart.Left, "left", -1.0, "left margin") // default set to out of bounds because different charts need individual defaults
+	flag.Float64Var(&chart.Left, "left", -1, "left margin")
 	flag.Float64Var(&chart.Right, "right", 90.0, "right margin")
 	flag.Float64Var(&chart.Top, "top", 80.0, "top of the plot")
 	flag.Float64Var(&chart.Bottom, "bottom", 30.0, "bottom of the plot")
