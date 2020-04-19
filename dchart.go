@@ -23,51 +23,51 @@ type ChartData struct {
 
 // Flags define chart on/off switches
 type Flags struct {
-	ShowBar,
-	ShowValues,
-	ShowXLast,
-	ShowLine,
-	ShowHBar,
-	ShowWBar,
-	ShowSlope,
+	DataMinimum,
+	FullDeck,
+	ReadCSV,
 	ShowAxis,
-	ShowNote,
-	ShowRegressionLine,
+	ShowBar,
+	ShowDonut,
+	ShowDot,
 	ShowFrame,
 	ShowGrid,
-	ShowTitle,
-	FullDeck,
-	ShowDonut,
-	ShowPMap,
+	ShowHBar,
+	ShowLine,
+	ShowNote,
+	ShowPercentage,
 	ShowPGrid,
+	ShowPMap,
 	ShowRadial,
-	ShowSpokes,
-	SolidPMap,
-	ShowXstagger,
-	ReadCSV,
-	ShowDot,
-	DataMinimum,
-	ShowVolume,
+	ShowRegressionLine,
 	ShowScatter,
-	ShowPercentage bool
+	ShowSlope,
+	ShowSpokes,
+	ShowTitle,
+	ShowValues,
+	ShowVolume,
+	ShowWBar,
+	ShowXLast,
+	ShowXstagger,
+	SolidPMap bool
 }
 
 // Attributes define chart attributes
 type Attributes struct {
 	BackgroundColor,
 	DataColor,
-	DataFmt,
-	ChartTitle,
-	ValuePosition,
-	ValueColor,
-	YAxisR,
-	CSVCols,
-	HLine,
-	NoteLocation,
+	FrameColor,
 	LabelColor,
 	RegressionLineColor,
-	FrameColor,
-	DataCondition string
+	ValueColor,
+	ChartTitle,
+	CSVCols,
+	DataCondition,
+	DataFmt,
+	HLine,
+	NoteLocation,
+	ValuePosition,
+	YAxisR string
 }
 
 // Measures define chart measures
@@ -79,12 +79,12 @@ type Measures struct {
 	Bottom,
 	LineSpacing,
 	BarWidth,
-	UserMin,
-	UserMax,
+	LineWidth,
 	PSize,
 	PWidth,
+	UserMin,
+	UserMax,
 	VolumeOpacity,
-	LineWidth,
 	XLabelRotation float64
 	XLabelInterval,
 	PMapLength int
@@ -1252,6 +1252,8 @@ func NewFullChart(chartType string, top, bottom, left, right float64) Settings {
 }
 
 // NewChart initializes the settings required to make a chart
+// chartType may be one of: "line", "slope", "bar", "wbar", "hbar",
+// "volume, "scatter", "donut", "pmap", "pgrid","radial"
 func NewChart(chartType string, top, bottom, left, right float64) Settings {
 	var s Settings
 
@@ -1262,8 +1264,22 @@ func NewChart(chartType string, top, bottom, left, right float64) Settings {
 		s.Flags.ShowWBar = true
 	case "hbar":
 		s.Flags.ShowHBar = true
+	case "donut":
+		s.Flags.ShowDonut = true
+	case "pmap":
+		s.Flags.ShowPMap = true
+	case "pgrid":
+		s.Flags.ShowPGrid = true
+	case "radial":
+		s.Flags.ShowRadial = true
 	case "line":
 		s.Flags.ShowLine = true
+	case "scatter":
+		s.Flags.ShowScatter = true
+	case "volume", "area":
+		s.Flags.ShowVolume = true
+	case "slope":
+		s.Flags.ShowSlope = true
 	}
 	if left <= 0 {
 		left = 10
@@ -1284,6 +1300,7 @@ func NewChart(chartType string, top, bottom, left, right float64) Settings {
 	s.Measures.XLabelInterval = 1
 	s.Measures.TextSize = 1.5
 	s.Measures.LineSpacing = 2.4
+
 	s.Attributes.BackgroundColor = "white"
 	s.Attributes.DataColor = "lightsteelblue"
 	s.Attributes.LabelColor = "rgb(75,75,75)"
