@@ -22,7 +22,7 @@ deck
 
 	// chart types
 	slide
-		topts="-fulldeck=f -textsize=0.75 -title=f"
+		topts="-fulldeck=f -title=f -textsize=0.75"
 		r1="-top=90 -bottom=70"
 		r2="-top=57 -bottom=45"
 		r3="-top=27 -bottom=20"
@@ -56,8 +56,8 @@ deck
 		text "Word Bar"           55 tr ts
 		text "Slope"              80 tr ts
 		tr-=23
-		text "Dot"                5  tr ts
-		text "Scatter"            30 tr ts
+		text "Scatter"             5  tr ts
+		text "Dot"                30 tr ts
 		text "Line"               55 tr ts
 		text "Area"               80 tr ts
 		tr-=37
