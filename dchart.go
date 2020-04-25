@@ -72,6 +72,8 @@ type Attributes struct {
 
 // Measures define chart measures
 type Measures struct {
+	CanvasWidth,
+	CanvasHeight,
 	TextSize,
 	Left,
 	Right,
@@ -490,12 +492,20 @@ func polar(x, y, r, t float64) (float64, float64) {
 	return px, py
 }
 
+// cpolar converts polar to Cartesion coordinates, compensating for the canvas aspect ratio
+func cpolar(x, y, r, t, w, h float64) (float64, float64) {
+	px := x + (r*math.Cos(t))
+	ry := r * (w/h)
+	py := y + (ry*math.Sin(t))
+	return px, py
+}
+
 // spokes draws the points and lines like spokes on a wheel
-func spokes(deck *generate.Deck, cx, cy, r, spokesize float64, n int, color string) {
+func spokes(deck *generate.Deck, cx, cy, r, spokesize, w, h float64, n int, color string) {
 	t := topclock
 	step := fullcircle / float64(n)
 	for i := 0; i < n; i++ {
-		px, py := polar(cx, cy, r, t)
+		px, py := cpolar(cx, cy, r, t, w, h)
 		deck.Line(cx, cy, px, py, spokesize, "lightgray")
 		deck.Circle(px, py, 0.5, color)
 		t -= step
@@ -512,9 +522,15 @@ func (s *Settings) radial(deck *generate.Deck, data []ChartData, title string, m
 	umax := s.Measures.UserMax
 	ts := s.Measures.TextSize
 
+	if s.Measures.CanvasHeight == 0 || s.Measures.CanvasWidth == 0 {
+		s.Measures.CanvasWidth, s.Measures.CanvasHeight = 792.9, 612.0
+	}
+
 	if left < 0 {
 		left = 50.0
 	}
+
+	rw, rh := s.Measures.CanvasWidth, s.Measures.CanvasHeight
 
 	dx := left
 	dy := top
@@ -528,10 +544,11 @@ func (s *Settings) radial(deck *generate.Deck, data []ChartData, title string, m
 	deck.Circle(dx, dy, pwidth*2, "silver", 10)
 	step := fullcircle / float64(len(data))
 	var color string
+	
 	for _, d := range data {
 		cv := vmap(d.value, 0, maxd, 2, psize)
-		px, py := polar(dx, dy, pwidth, t)
-		tx, ty := polar(dx, dy, pwidth+(psize/2)+(ts*2), t)
+		px, py := cpolar(dx, dy, pwidth, t, rw, rh)
+		tx, ty := cpolar(dx, dy, pwidth+(psize/2)+(ts*2), t, rw, rh)
 
 		if len(d.note) > 0 {
 			color = d.note
@@ -544,7 +561,7 @@ func (s *Settings) radial(deck *generate.Deck, data []ChartData, title string, m
 			deck.TextMid(px, py-ts/3, dformat(s.Attributes.DataFmt, d.value), "mono", ts, s.Attributes.ValueColor)
 		}
 		if s.Flags.ShowSpokes {
-			spokes(deck, px, py, psize/2, 0.05, int(d.value), color)
+			spokes(deck, px, py, psize/2, 0.05, rw, rh, int(d.value), color)
 		} else {
 			deck.Circle(px, py, cv, color, transparency)
 			deck.Line(tx, ty, px, py, 0.05, "gray", 50)
@@ -1300,6 +1317,8 @@ func NewChart(chartType string, top, bottom, left, right float64) Settings {
 	s.Measures.XLabelInterval = 1
 	s.Measures.TextSize = 1.5
 	s.Measures.LineSpacing = 2.4
+	s.Measures.CanvasWidth = 792
+	s.Measures.CanvasHeight = 612
 
 	s.Attributes.BackgroundColor = "white"
 	s.Attributes.DataColor = "lightsteelblue"

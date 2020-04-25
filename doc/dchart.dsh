@@ -376,8 +376,8 @@ deck
 	// Example Section	
 	opts="-fulldeck=f"
 	cap1x=50
-	cap1y=15
-	cap2y=cap1y-10
+	cap1y=10
+	cap2y=cap1y-5
 	capsize=4
 	cmdsize=capsize*0.5
 
@@ -697,15 +697,15 @@ deck
 
 	// radial
 	slide bgcolor textcolor
-		dchart opts -psize=10 -pwidth=25 -top=60 -radial -textsize=3 code/count.d
+		dchart opts -psize=10 -pwidth=20 -top=55 -radial -textsize=3 code/count.d
 		ctext "Radial" cap1x cap1y capsize
-		ctext "dchart -radial -psize=10 -pwidth=25 -top=60 -textsize=3 count.d" cap1x cap2y cmdsize "mono" cmdcolor
+		ctext "dchart -radial -psize=10 -pwidth=20 -top=55 -textsize=3 count.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 
 	// radial with spokes
 	slide bgcolor textcolor
-		dchart opts -psize=10 -pwidth=25 -top=60 -radial -textsize=3 -spokes code/clock.d
+		dchart opts -psize=5 -pwidth=20 -top=55 -radial -textsize=3 -spokes code/clock.d
 		ctext "Radial with Spokes" cap1x cap1y capsize
-		ctext "dchart -radial -psize=10 -pwidth=25 -top=60 -textsize=3 -spokes clock.d" cap1x cap2y cmdsize "mono" cmdcolor
+		ctext "dchart -radial -psize=5 -pwidth=20 -top=55 -textsize=3 -spokes clock.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 edeck
