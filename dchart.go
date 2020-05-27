@@ -494,9 +494,9 @@ func polar(x, y, r, t float64) (float64, float64) {
 
 // cpolar converts polar to Cartesion coordinates, compensating for the canvas aspect ratio
 func cpolar(x, y, r, t, w, h float64) (float64, float64) {
-	px := x + (r*math.Cos(t))
-	ry := r * (w/h)
-	py := y + (ry*math.Sin(t))
+	px := x + (r * math.Cos(t))
+	ry := r * (w / h)
+	py := y + (ry * math.Sin(t))
 	return px, py
 }
 
@@ -544,7 +544,7 @@ func (s *Settings) radial(deck *generate.Deck, data []ChartData, title string, m
 	deck.Circle(dx, dy, pwidth*2, "silver", 10)
 	step := fullcircle / float64(len(data))
 	var color string
-	
+
 	for _, d := range data {
 		cv := vmap(d.value, 0, maxd, 2, psize)
 		px, py := cpolar(dx, dy, pwidth, t, rw, rh)
@@ -710,9 +710,9 @@ func (s *Settings) pmap(deck *generate.Deck, data []ChartData, title string) {
 
 		df := s.Attributes.DataFmt
 		if s.Flags.ShowValues {
-			deck.TextMid(x+(bx/2), ty+(pwidth), data[i].label, "sans", ts*0.75, textcolor)
 			deck.TextMid(x+(bx/2), ty-pwidth, dformat(df, data[i].value), "mono", ts/2, s.Attributes.ValueColor)
 		}
+		deck.TextMid(x+(bx/2), ty+(pwidth), data[i].label, "sans", ts*0.75, textcolor)
 		deck.TextMid(x+(bx/2), ty-(ts/2), fmt.Sprintf(df+"%%", p), "sans", ts, textcolor)
 
 		x += bx - hspace
