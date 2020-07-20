@@ -69,6 +69,7 @@ flags control the visibility of plot components.
 	-hbar        horizontal chart layout (default false)
 	-scatter     show a scatter chart (default false)
 	-dot         show dot plot (default false)
+	-lego        show lego chart (default false)
 	-line        show line chart (default false)
 	-slope       show a slope chart (default false)
 	-frame       show a frame outlining the chart (default false)
@@ -248,6 +249,10 @@ the note field may be used to specify the color
 
 	$ dchart -ls 3 -val=f -pgrid incar.d
 
+![lego](images/lego.png)
+
+	$ dchart -left 30 -top 80 -lego -textsize 4 
+
 Using this data in slope.d
 
 	# Test Slope Graphs
@@ -292,6 +297,8 @@ Using this data in count.d:
 	Ten	100	pink
 
 	$ dchart -psize=10 -pwidth=40 -left=50 -top=50 -radial -textsize=3 data/incr.d|pdf -pagesize 800,800
+
+
 
 
 ![radial](images/radial.png)
