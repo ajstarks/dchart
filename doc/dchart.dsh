@@ -173,6 +173,7 @@ deck
 			li "-hbar"
 			li "-donut"
 			li "-dot"
+			li "-lego"
 			li "-line"
 			li "-pgrid"
 			li "-pmap"
@@ -194,6 +195,7 @@ deck
 			li "false"
 			li "false"
 			li "false"
+			li "false"
 		elist
 		list defcol1 row1a tts "sans" "black" 100 tsp
 			li "bar chart"
@@ -201,6 +203,7 @@ deck
 			li "horizontal bar chart"
 			li "donut chart"
 			li "dot chart"
+			li "lego chart"
 			li "line chart"
 			li "proportional grid"
 			li "proportional map"
@@ -693,7 +696,14 @@ deck
 		dchart opts -left 35 -top 80 -ls 3 -pgrid -val=f code/incar.d
 		ctext "Pgrid" cap1x cap1y capsize
 		ctext "dchart -left 35 -top 80 -ls 3 -pgrid -val=f incar.d" cap1x cap2y cmdsize "mono" cmdcolor
-	eslide	
+	eslide
+
+	// lego
+	slide bgcolor textcolor
+		dchart opts -left 30 -top 80 -textsize 4 -lego code/incar.d
+		ctext "Lego" cap1x cap1y capsize
+		ctext "dchart -left 30 -top 80 -textsize 4 -lego  incar.d" cap1x cap2y cmdsize "mono" cmdcolor
+	eslide
 
 	// radial
 	slide bgcolor textcolor

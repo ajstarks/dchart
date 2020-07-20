@@ -34,6 +34,7 @@ type Flags struct {
 	ShowGrid,
 	ShowHBar,
 	ShowLine,
+	ShowLego,
 	ShowNote,
 	ShowPercentage,
 	ShowPGrid,
@@ -485,6 +486,52 @@ func (s *Settings) pgrid(deck *generate.Deck, data []ChartData, title string, ro
 	}
 }
 
+// dotgrid makes a grid 10x10 grid of dots colored by value
+func dotgrid(deck *generate.Deck, x, y, left, step float64, n int, fillcolor string) (float64, float64) {
+	edge := (((step * 0.3) + step) * 7) + left
+	for i := 0; i < n; i++ {
+		if x > edge {
+			x = left
+			y -= step
+		}
+		deck.Circle(x, y, 2*step*0.3, fillcolor)
+		deck.Rect(x, y, step*0.9, step*0.9, fillcolor, 30)
+		x += step
+	}
+	return x, y
+}
+
+// lego makes lego charts (a variation of pgrid)
+func (s *Settings) lego(deck *generate.Deck, data []ChartData, title string) {
+	left := s.Measures.Left
+	x := left
+	y := s.Measures.Top
+	step := s.Measures.TextSize
+
+	if len(title) > 0 && s.Flags.ShowTitle {
+		deck.Text(left-step/2, y+step*2, title, "sans", step, Titlecolor)
+	}
+	sum := 0.0
+	for _, d := range data {
+		sum += d.value
+	}
+	for _, d := range data {
+		pct := (d.value / sum) * 100
+		v := int(math.Round(pct))
+		px, py := dotgrid(deck, x, y, left, step, v, d.note)
+		x = px
+		y = py
+	}
+	y -= step * 2
+	for _, d := range data {
+		pct := (d.value / sum) * 100
+		v := int(math.Round(pct))
+		deck.Circle(left, y, 2*step*0.3, d.note)
+		deck.Text(left+step, y-step*0.2, fmt.Sprintf("%s (%.d%%)", d.label, v), "sans", step*0.5, "")
+		y -= step
+	}
+}
+
 // polar converts polar to Cartesian coordinates
 func polar(x, y, r, t float64) (float64, float64) {
 	px := x + r*math.Cos(t)
@@ -783,6 +830,8 @@ func (s *Settings) Pchart(deck *generate.Deck, r io.ReadCloser) {
 		s.pmap(deck, data, title)
 	case f.ShowPGrid:
 		s.pgrid(deck, data, title, 10, 10)
+	case f.ShowLego:
+		s.lego(deck, data, title)
 	case f.ShowRadial:
 		s.radial(deck, data, title, maxdata)
 	}
@@ -1246,7 +1295,7 @@ func (s *Settings) GenerateChart(deck *generate.Deck, r io.ReadCloser) {
 		s.Hchart(deck, r)
 	case f.ShowWBar:
 		s.Wbchart(deck, r)
-	case f.ShowDonut, f.ShowPMap, f.ShowPGrid, f.ShowRadial:
+	case f.ShowDonut, f.ShowPMap, f.ShowPGrid, f.ShowRadial, f.ShowLego:
 		s.Pchart(deck, r)
 	case f.ShowSlope:
 		s.Slopechart(deck, r)
@@ -1270,7 +1319,7 @@ func NewFullChart(chartType string, top, bottom, left, right float64) Settings {
 
 // NewChart initializes the settings required to make a chart
 // chartType may be one of: "line", "slope", "bar", "wbar", "hbar",
-// "volume, "scatter", "donut", "pmap", "pgrid","radial"
+// "volume, "scatter", "donut", "pmap", "pgrid", "lego", "radial"
 func NewChart(chartType string, top, bottom, left, right float64) Settings {
 	var s Settings
 
@@ -1287,6 +1336,8 @@ func NewChart(chartType string, top, bottom, left, right float64) Settings {
 		s.Flags.ShowPMap = true
 	case "pgrid":
 		s.Flags.ShowPGrid = true
+	case "lego":
+		s.Flags.ShowLego = true
 	case "radial":
 		s.Flags.ShowRadial = true
 	case "line":
