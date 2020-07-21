@@ -1,4 +1,4 @@
-github.com/ajstarks/deck v0.0.0-20200418042010-55a9856ad60e h1:+NA3TibJaeX2chGgmuvOUYm+y/lLYMRDGzdE2EbdbJc=
-github.com/ajstarks/deck v0.0.0-20200418042010-55a9856ad60e/go.mod h1:JynElWSGnm/4RlzPXRlREEwqTHAN3T56Bv2ITsFT3gY=
-github.com/ajstarks/deck/generate v0.0.0-20200418042010-55a9856ad60e h1:3izk0CjUazbE+NNFFY9DYO4vVjmQq7kUjKZISmAx8PI=
-github.com/ajstarks/deck/generate v0.0.0-20200418042010-55a9856ad60e/go.mod h1:D/JDLUt8enaNLg7TEuwlg+n8w+OWrqOMBaUbnua/5K8=
+github.com/ajstarks/deck v0.0.0-20200710014016-91efe3db76b2 h1:LZIlPlvxSyi91GjSykrSoHUHYKjvuLPdLNTcPR8XDY0=
+github.com/ajstarks/deck v0.0.0-20200710014016-91efe3db76b2/go.mod h1:JynElWSGnm/4RlzPXRlREEwqTHAN3T56Bv2ITsFT3gY=
+github.com/ajstarks/deck/generate v0.0.0-20200710014016-91efe3db76b2 h1:3+kUr1SdKmvZ7yAfTOE//kEgGQNz1oFht2IXLCh+A9o=
+github.com/ajstarks/deck/generate v0.0.0-20200710014016-91efe3db76b2/go.mod h1:D/JDLUt8enaNLg7TEuwlg+n8w+OWrqOMBaUbnua/5K8=
