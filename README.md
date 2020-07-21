@@ -247,7 +247,11 @@ Using this data in incar.d:
 
 the note field may be used to specify the color
 
+![pgrid](images/pgrid.png)
+
 	$ dchart -ls 3 -val=f -pgrid incar.d
+
+Here is the lego chart variation:
 
 ![lego](images/lego.png)
 
@@ -280,7 +284,7 @@ Using this data in slope.d
 	$ dchart -slope -left=10 -right=30 -top=80 -bottom=60 slope.d
 	
 
-![pgrid](images/pgrid.png)
+
 
 Using this data in count.d:
 
