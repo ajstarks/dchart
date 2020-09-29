@@ -115,6 +115,11 @@ var xmlmap = strings.NewReplacer(
 	"<", "&lt;",
 	">", "&gt;")
 
+var nlmap = strings.NewReplacer(
+	`\n`, " ",
+	`\t`, " ",
+)
+
 const (
 	// Titlecolor is the color of the title string
 	Titlecolor = "black"
@@ -798,7 +803,7 @@ func (s *Settings) donut(deck *generate.Deck, data []ChartData, title string) {
 		deck.TextMid(dx, dy+(psize*1.2), title, "sans", s.Measures.TextSize*1.5, Titlecolor)
 	}
 	for i, p := range pct(data) {
-		angle := (p / 100) * 360.0
+		angle := (p / 100) * fullcircle
 		a2 := a1 + angle
 		mid := (a1 + a2) / 2
 
@@ -952,7 +957,8 @@ func (s *Settings) Hchart(deck *generate.Deck, r io.ReadCloser) {
 	y := top
 
 	for _, data := range bardata {
-		deck.TextEnd(left-hts, y+(hts/2), data.label, "sans", ts, labelcolor)
+		label := nlmap.Replace(data.label) // replace '\n' with spaces
+		deck.TextEnd(left-hts, y+(hts/2), label, "sans", ts, labelcolor)
 		bv := vmap(data.value, mindata, maxdata, left, right)
 		if f.ShowDot {
 			dottedhline(deck, left, y+hts, bv-left, ts/5, 1, 0.25, Dotlinecolor)
