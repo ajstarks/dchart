@@ -150,12 +150,12 @@ deck
 
 		defcol1=col2+16
 		defcol2=col4+16
-		vskip=4				// space between headers and data
+		vskip=3				// space between headers and data
 
 		row1=95				// top: headers
 		row1a=row1-vskip	// data
 
-		row2=row1-40		// second row
+		row2=row1-42		// second row
 		row2a=row2-vskip	// data
 
 		rect 25 80 50 40 chartcolor 10
@@ -177,6 +177,8 @@ deck
 			li "-line"
 			li "-pgrid"
 			li "-pmap"
+			li "-bowtie"
+			li "-fan"
 			li "-radial"
 			li "-scatter"
 			li "-slope"
@@ -184,6 +186,8 @@ deck
 		elist
 			list col2 row1a tts "sans" cmdcolor 100 tsp
 			li "true"
+			li "false"
+			li "false"
 			li "false"
 			li "false"
 			li "false"
@@ -207,6 +211,8 @@ deck
 			li "line chart"
 			li "proportional grid"
 			li "proportional map"
+			li "bowtie chart"
+			li "fan chart"
 			li "radial chart"
 			li "scatter chart"
 			li "slope chart"
@@ -717,5 +723,19 @@ deck
 		dchart opts -psize=5 -pwidth=20 -top=55 -radial -textsize=3 -spokes code/clock.d
 		ctext "Radial with Spokes" cap1x cap1y capsize
 		ctext "dchart -radial -psize=5 -pwidth=20 -top=55 -textsize=3 -spokes clock.d" cap1x cap2y cmdsize "mono" cmdcolor
+	eslide
+
+	// bowtie
+	slide bgcolor textcolor
+		dchart opts -psize=30 -top=60 -bowtie  code/occupation.d
+		ctext "Bowtie chart" cap1x cap1y capsize
+		ctext "dchart -psize=30 -top=60 -bowtie  occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
+	eslide
+
+	// fan
+	slide bgcolor textcolor
+		dchart opts -psize=30 -top=60 -fan code/occupation.d
+		ctext "Fan chart" cap1x cap1y capsize
+		ctext "dchart -psize=30 -top=60 -fan occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 edeck

@@ -51,6 +51,8 @@ func cmdflags() dchart.Settings {
 	flag.BoolVar(&chart.ShowSpokes, "spokes", false, "show spokes on radial charts")
 	flag.BoolVar(&chart.ShowPGrid, "pgrid", false, "show proportional grid")
 	flag.BoolVar(&chart.ShowLego, "lego", false, "show lego chart")
+	flag.BoolVar(&chart.ShowBowtie, "bowtie", false, "show bowtie chart")
+	flag.BoolVar(&chart.ShowFan, "fan", false, "show fan chart")
 	flag.BoolVar(&chart.ShowNote, "note", true, "show annotations")
 	flag.BoolVar(&chart.ShowFrame, "frame", false, "show frame")
 	flag.BoolVar(&chart.ShowRegressionLine, "rline", false, "show regression line")

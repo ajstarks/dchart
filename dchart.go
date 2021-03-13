@@ -28,8 +28,10 @@ type Flags struct {
 	ReadCSV,
 	ShowAxis,
 	ShowBar,
+	ShowBowtie,
 	ShowDonut,
 	ShowDot,
+	ShowFan,
 	ShowFrame,
 	ShowGrid,
 	ShowHBar,
@@ -817,6 +819,191 @@ func (s *Settings) donut(deck *generate.Deck, data []ChartData, title string) {
 	}
 }
 
+const (
+	topbegAngle   = 145.0 // top beginning angle
+	botbegAngle   = 215.0 // bottom beginning angle
+	fanspan       = 110.0 // span size of the top and bottom of the fan
+	leftbegAngle  = 135.0 // left beginning angle
+	rightbegAngle = 315.0 // right beginning angle
+	wingspan      = 90.0  // span size of the left and right wings
+	arclabelsize  = 1.5
+)
+
+// data split divides a data set into two sections
+func datasplit(data []ChartData) ([]ChartData, []ChartData) {
+	half := len(data) / 2
+	top := make([]ChartData, half)
+	bottom := make([]ChartData, half)
+	copy(top, data[0:half])
+	copy(bottom, data[half:])
+	return top, bottom
+}
+
+// polar to Cartesian coordinates, corrected for aspect ratio
+func fpolar(cx, cy, r, theta, cw, ch float64) (float64, float64) {
+	ry := r * (cw / ch)
+	t := theta * (math.Pi / 180)
+	return cx + (r * math.Cos(t)), cy + (ry * math.Sin(t))
+}
+
+// legend makes a balanced left and right hand legend
+func legend(deck *generate.Deck, data []ChartData, orientation string, rows int, midx, ts float64) {
+	var x, y, xoffset float64
+	right := len(data) % rows
+	left := len(data) - right
+	r := ts + 1.0
+	leading := ts * 5.5
+
+	switch orientation {
+	case "tb":
+		x = 5.0
+		y = 60.0
+	case "lr":
+		x = midx - 10
+		y = 87.0
+	}
+	// left/top legend
+	xoffset = 3
+	for i := 0; i < left; i++ {
+		label := data[i].label
+		deck.Circle(x, y, r, data[i].note)
+		legendlabel(deck, label, x+xoffset, y, ts)
+		y -= leading
+	}
+	// right/bottom legend
+	switch orientation {
+	case "tb":
+		x = 100 - x
+		y = 60
+		xoffset = -20.0
+	case "lr":
+		y = 25.0
+	}
+	for i := left; i < len(data); i++ {
+		label := data[i].label
+		deck.Circle(x, y, r, data[i].note)
+		legendlabel(deck, label, x+xoffset, y, ts)
+		y -= leading
+	}
+}
+
+// legendlabel lays out the legend labels for fan and bowtie charts
+func legendlabel(deck *generate.Deck, s string, x, y, ts float64) {
+	w := strings.Split(s, `\n`)
+	lw := len(w)
+	if lw == 1 {
+		deck.Text(x, y-(ts/3), s, "sans", ts, "")
+	} else {
+		y = y + (ts * (float64(lw / 3)))
+		for i := 0; i < lw; i++ {
+			deck.Text(x, y, w[i], "sans", ts, "")
+			y -= (ts * 1.8)
+		}
+	}
+}
+
+// arclabel labels the data items
+func arclabel(deck *generate.Deck, cx, cy, a1, a2, asize, value, cw, ch float64) {
+	v := strconv.FormatFloat(value, 'f', 1, 64)
+	diff := a2 - a1
+	lx, ly := fpolar(cx, cy, asize*0.9, a1+(diff*0.5), cw, ch)
+	deck.TextMid(lx, ly, v+"%", "sans", arclabelsize, "")
+}
+
+// wedge makes data wedges
+func wedge(deck *generate.Deck, data []ChartData, cx, cy, begAngle, asize, cw, ch float64) {
+	start := begAngle
+	for _, d := range data {
+		m := (d.value / 100) * wingspan
+		a1 := start
+		a2 := start + m
+		deck.Arc(cx, cy, asize, asize, asize, a1, a2, d.note)
+		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch)
+		start = a2
+	}
+}
+
+// bowtie makes a bowtie chart
+func (s *Settings) bowtie(deck *generate.Deck, data []ChartData, title string) {
+	top := s.Measures.Top
+	left := s.Measures.Left
+	asize := s.Measures.PSize
+	//ts := s.TextSize
+
+	if left < 0 {
+		left = 50.0
+	}
+	cx := left
+	cy := top - (asize / 2)
+	cw := s.CanvasWidth
+	ch := s.CanvasHeight
+
+	topdata, botdata := datasplit(data)
+
+	//var lx, ly float64
+	//lx, ly = cpolar(cx, cy, asize+1, 180, cw, ch)
+	//deck.TextEnd(lx, ly, "", "sans", ts, s.LabelColor)
+	wedge(deck, topdata, cx, cy, leftbegAngle, asize, cw, ch)
+	//lx, ly = cpolar(cx, cy, asize+1, 0, cw, ch)
+	//deck.TextEnd(lx, ly, "", "sans", ts, s.LabelColor)
+	wedge(deck, botdata, cx, cy, rightbegAngle, asize, cw, ch)
+
+	ty := cy + (asize * 1.2)
+	if s.Flags.ShowValues {
+		legend(deck, topdata, "lr", 3, cx, arclabelsize)
+		ty = 92.0
+	}
+	if len(title) > 0 && s.Flags.ShowTitle {
+		deck.TextMid(cx, ty, title, "sans", s.Measures.TextSize*1.5, Titlecolor)
+	}
+}
+
+// fan makes a fan chart
+func (s *Settings) fan(deck *generate.Deck, data []ChartData, title string) {
+	top := s.Measures.Top
+	left := s.Measures.Left
+	asize := s.Measures.PSize
+
+	if left < 0 {
+		left = 50.0
+	}
+	cx := left
+	cy := top - (asize / 2)
+	cw := s.CanvasWidth
+	ch := s.CanvasHeight
+
+	topdata, botdata := datasplit(data)
+	if len(title) > 0 && s.Flags.ShowTitle {
+		deck.TextMid(cx, cy+(asize*1.5), title, "sans", s.Measures.TextSize*1.5, Titlecolor)
+	}
+	var start float64
+	// the top of the fan chart
+	start = topbegAngle
+	for _, d := range topdata {
+		m := (d.value / 100) * fanspan
+		a1 := start - m
+		a2 := start
+		deck.Arc(cx, cy, asize, asize, asize, a1, a2, d.note)
+		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch)
+		start = a1
+	}
+	// bottom of the fan chart
+	start = botbegAngle
+	for i := len(botdata) - 1; i >= 0; i-- {
+		d := botdata[i]
+		m := (d.value / 100) * fanspan
+		a1 := start + m
+		a2 := start
+		deck.Arc(cx, cy, asize, asize, asize, a2, a1, d.note)
+		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch)
+		start = a1
+	}
+
+	if s.Flags.ShowValues {
+		legend(deck, topdata, "tb", 3, cx, arclabelsize)
+	}
+}
+
 // Pchart draws proportional data, either a pmap, pgrid, radial or donut using input from a Reader
 func (s *Settings) Pchart(deck *generate.Deck, r io.ReadCloser) {
 	f := s.Flags
@@ -833,6 +1020,10 @@ func (s *Settings) Pchart(deck *generate.Deck, r io.ReadCloser) {
 		s.donut(deck, data, title)
 	case f.ShowPMap:
 		s.pmap(deck, data, title)
+	case f.ShowBowtie:
+		s.bowtie(deck, data, title)
+	case f.ShowFan:
+		s.fan(deck, data, title)
 	case f.ShowPGrid:
 		s.pgrid(deck, data, title, 10, 10)
 	case f.ShowLego:
@@ -1301,7 +1492,7 @@ func (s *Settings) GenerateChart(deck *generate.Deck, r io.ReadCloser) {
 		s.Hchart(deck, r)
 	case f.ShowWBar:
 		s.Wbchart(deck, r)
-	case f.ShowDonut, f.ShowPMap, f.ShowPGrid, f.ShowRadial, f.ShowLego:
+	case f.ShowDonut, f.ShowPMap, f.ShowPGrid, f.ShowRadial, f.ShowLego, f.ShowFan, f.ShowBowtie:
 		s.Pchart(deck, r)
 	case f.ShowSlope:
 		s.Slopechart(deck, r)
@@ -1325,7 +1516,7 @@ func NewFullChart(chartType string, top, bottom, left, right float64) Settings {
 
 // NewChart initializes the settings required to make a chart
 // chartType may be one of: "line", "slope", "bar", "wbar", "hbar",
-// "volume, "scatter", "donut", "pmap", "pgrid", "lego", "radial"
+// "volume, "scatter", "donut", "pmap", "pgrid", "lego", "radial", "bowtie", "fan"
 func NewChart(chartType string, top, bottom, left, right float64) Settings {
 	var s Settings
 
@@ -1338,6 +1529,10 @@ func NewChart(chartType string, top, bottom, left, right float64) Settings {
 		s.Flags.ShowHBar = true
 	case "donut":
 		s.Flags.ShowDonut = true
+	case "bowtie":
+		s.Flags.ShowBowtie = true
+	case "fan":
+		s.Flags.ShowFan = true
 	case "pmap":
 		s.Flags.ShowPMap = true
 	case "pgrid":

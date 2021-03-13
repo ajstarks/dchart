@@ -70,6 +70,8 @@ flags control the visibility of plot components.
 	-scatter     show a scatter chart (default false)
 	-dot         show dot plot (default false)
 	-lego        show lego chart (default false)
+	-bowtie      show bowtie chart (default false)
+	-fan         show fan chart (default false)
 	-line        show line chart (default false)
 	-slope       show a slope chart (default false)
 	-frame       show a frame outlining the chart (default false)

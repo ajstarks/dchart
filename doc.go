@@ -29,6 +29,9 @@ The command line options are:
 	-wbar        show "word" bar chart (default false)
 	-line        show line chart (default false)
 	-dot         show dot plot (default false)
+	-lego        show lego chart (default false)
+	-bowtie      show bowtie chart (default false)
+	-fan         show fanchart (default false)
 	-grid        show gridlines on the y axis (default false)
 	-val         show values (default true)
 	-rline       show a regression line (default false)
@@ -49,7 +52,6 @@ The command line options are:
 	-chartitle   specify the title (overiding title in the data)
 	-hline       horizontal line with optional label (value,label)
 	-noteloc     note location (c-center, r-right, l-left, default c)
-
 
 	-top         top of the plot (default 80)
 	-bottom      bottom of the plot (default 30)
