@@ -727,15 +727,15 @@ deck
 
 	// bowtie
 	slide bgcolor textcolor
-		dchart opts -psize=30 -top=60 -bowtie  code/occupation.d
+		dchart opts -val=t -psize=20 -top=60 -bowtie  code/occupation.d
 		ctext "Bowtie chart" cap1x cap1y capsize
-		ctext "dchart -psize=30 -top=60 -bowtie  occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
+		ctext "dchart -val=t -psize=20 -top=60 -bowtie  occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 
 	// fan
 	slide bgcolor textcolor
-		dchart opts -psize=30 -top=60 -fan code/occupation.d
+		dchart opts -val=t -psize=20 -top=60 -fan code/occupation.d
 		ctext "Fan chart" cap1x cap1y capsize
-		ctext "dchart -psize=30 -top=60 -fan occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
+		ctext "dchart -val=t -psize=20 -top=60 -fan occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 edeck
