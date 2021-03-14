@@ -41,3 +41,6 @@ dchart -pmap -pwidth=5 -textsize=1 -solidpmap -pmlen=30 code/browser.d | pdfdeck
 dchart -left 35 -top 80 -ls 3 -pgrid -val=f code/incar.d | pdfdeck -stdout - > dchart40.pdf
 dchart -radial -psize=10 -pwidth=20 -top=55 -textsize=3 code/count.d | pdfdeck -stdout - > dchart41.pdf
 dchart -radial -psize=5 -pwidth=20 -top=55 -textsize=3 -spokes code/clock.d | pdfdeck -stdout - > dchart42.pdf
+dchart -left 30 -top 80 -textsize 5 -lego  code/incar.d | pdfdeck -stdout -pagesize 1000,1000 - > dchart43.pdf
+dchart -psize 30 -top=60 -fan code/occupation.d |  pdfdeck -stdout - > dchart44.pdf
+dchart -psize 30 -top=60 -bowtie code/occupation.d |  pdfdeck -stdout - > dchart45.pdf
