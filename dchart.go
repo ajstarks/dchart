@@ -805,7 +805,7 @@ func (s *Settings) donut(deck *generate.Deck, data []ChartData, title string) {
 		deck.TextMid(dx, dy+(psize*1.2), title, "sans", s.Measures.TextSize*1.5, Titlecolor)
 	}
 	for i, p := range pct(data) {
-		angle := (p / 100) * fullcircle
+		angle := (p / 100) * 360 // fullcircle
 		a2 := a1 + angle
 		mid := (a1 + a2) / 2
 
@@ -839,7 +839,7 @@ func datasplit(data []ChartData) ([]ChartData, []ChartData) {
 	return top, bottom
 }
 
-// polar to Cartesian coordinates, corrected for aspect ratio
+// fpolar to Cartesian coordinates, corrected for aspect ratio
 func fpolar(cx, cy, r, theta, cw, ch float64) (float64, float64) {
 	ry := r * (cw / ch)
 	t := theta * (math.Pi / 180)
