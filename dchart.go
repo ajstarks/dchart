@@ -826,7 +826,7 @@ const (
 	leftbegAngle  = 135.0 // left beginning angle
 	rightbegAngle = 315.0 // right beginning angle
 	wingspan      = 90.0  // span size of the left and right wings
-	arclabelsize  = 1.5
+	lpadding      = 10.0  // label padding
 )
 
 // data split divides a data set into two sections
@@ -847,7 +847,7 @@ func fpolar(cx, cy, r, theta, cw, ch float64) (float64, float64) {
 }
 
 // legend makes a balanced left and right hand legend
-func legend(deck *generate.Deck, data []ChartData, orientation string, rows int, midx, ts float64) {
+func legend(deck *generate.Deck, data []ChartData, orientation string, rows int, cx, cy, asize, ts float64) {
 	var x, y, xoffset float64
 	right := len(data) % rows
 	left := len(data) - right
@@ -856,11 +856,11 @@ func legend(deck *generate.Deck, data []ChartData, orientation string, rows int,
 
 	switch orientation {
 	case "tb":
-		x = 5.0
-		y = 60.0
+		x = cx - asize - lpadding
+		y = cy + lpadding
 	case "lr":
-		x = midx - 10
-		y = 87.0
+		x = cx - r
+		y = cy + asize + (lpadding)
 	}
 	// left/top legend
 	xoffset = 3
@@ -873,11 +873,12 @@ func legend(deck *generate.Deck, data []ChartData, orientation string, rows int,
 	// right/bottom legend
 	switch orientation {
 	case "tb":
-		x = 100 - x
-		y = 60
+		x = cx + asize + lpadding
+		y = cy + lpadding
 		xoffset = -20.0
 	case "lr":
-		y = 25.0
+		x = cx - r
+		y = cy - (asize * 0.8)
 	}
 	for i := left; i < len(data); i++ {
 		label := data[i].label
@@ -903,22 +904,22 @@ func legendlabel(deck *generate.Deck, s string, x, y, ts float64) {
 }
 
 // arclabel labels the data items
-func arclabel(deck *generate.Deck, cx, cy, a1, a2, asize, value, cw, ch float64) {
+func arclabel(deck *generate.Deck, cx, cy, a1, a2, asize, value, cw, ch, ts float64) {
 	v := strconv.FormatFloat(value, 'f', 1, 64)
 	diff := a2 - a1
 	lx, ly := fpolar(cx, cy, asize*0.9, a1+(diff*0.5), cw, ch)
-	deck.TextMid(lx, ly, v+"%", "sans", arclabelsize, "")
+	deck.TextMid(lx, ly, v+"%", "sans", ts, "")
 }
 
 // wedge makes data wedges
-func wedge(deck *generate.Deck, data []ChartData, cx, cy, begAngle, asize, cw, ch float64) {
+func wedge(deck *generate.Deck, data []ChartData, cx, cy, begAngle, asize, cw, ch, ts float64) {
 	start := begAngle
 	for _, d := range data {
 		m := (d.value / 100) * wingspan
 		a1 := start
 		a2 := start + m
 		deck.Arc(cx, cy, asize, asize, asize, a1, a2, d.note)
-		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch)
+		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch, ts)
 		start = a2
 	}
 }
@@ -928,7 +929,7 @@ func (s *Settings) bowtie(deck *generate.Deck, data []ChartData, title string) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	asize := s.Measures.PSize
-	//ts := s.TextSize
+	ts := s.TextSize
 
 	if left < 0 {
 		left = 50.0
@@ -943,14 +944,14 @@ func (s *Settings) bowtie(deck *generate.Deck, data []ChartData, title string) {
 	//var lx, ly float64
 	//lx, ly = cpolar(cx, cy, asize+1, 180, cw, ch)
 	//deck.TextEnd(lx, ly, "", "sans", ts, s.LabelColor)
-	wedge(deck, topdata, cx, cy, leftbegAngle, asize, cw, ch)
+	wedge(deck, topdata, cx, cy, leftbegAngle, asize, cw, ch, ts)
 	//lx, ly = cpolar(cx, cy, asize+1, 0, cw, ch)
 	//deck.TextEnd(lx, ly, "", "sans", ts, s.LabelColor)
-	wedge(deck, botdata, cx, cy, rightbegAngle, asize, cw, ch)
+	wedge(deck, botdata, cx, cy, rightbegAngle, asize, cw, ch, ts)
 
 	ty := cy + (asize * 1.2)
 	if s.Flags.ShowValues {
-		legend(deck, topdata, "lr", 3, cx, arclabelsize)
+		legend(deck, topdata, "lr", 3, cx, cy, asize, ts)
 		ty = 92.0
 	}
 	if len(title) > 0 && s.Flags.ShowTitle {
@@ -963,6 +964,7 @@ func (s *Settings) fan(deck *generate.Deck, data []ChartData, title string) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	asize := s.Measures.PSize
+	ts := s.Measures.TextSize
 
 	if left < 0 {
 		left = 50.0
@@ -974,7 +976,7 @@ func (s *Settings) fan(deck *generate.Deck, data []ChartData, title string) {
 
 	topdata, botdata := datasplit(data)
 	if len(title) > 0 && s.Flags.ShowTitle {
-		deck.TextMid(cx, cy+(asize*1.5), title, "sans", s.Measures.TextSize*1.5, Titlecolor)
+		deck.TextMid(cx, cy+(asize*1.5), title, "sans", ts*1.5, Titlecolor)
 	}
 	var start float64
 	// the top of the fan chart
@@ -984,7 +986,7 @@ func (s *Settings) fan(deck *generate.Deck, data []ChartData, title string) {
 		a1 := start - m
 		a2 := start
 		deck.Arc(cx, cy, asize, asize, asize, a1, a2, d.note)
-		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch)
+		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch, ts)
 		start = a1
 	}
 	// bottom of the fan chart
@@ -995,12 +997,12 @@ func (s *Settings) fan(deck *generate.Deck, data []ChartData, title string) {
 		a1 := start + m
 		a2 := start
 		deck.Arc(cx, cy, asize, asize, asize, a2, a1, d.note)
-		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch)
+		arclabel(deck, cx, cy, a1, a2, asize, d.value, cw, ch, ts)
 		start = a1
 	}
 
 	if s.Flags.ShowValues {
-		legend(deck, topdata, "tb", 3, cx, arclabelsize)
+		legend(deck, topdata, "tb", 3, cx, cy, asize, ts)
 	}
 }
 
