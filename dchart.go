@@ -849,11 +849,13 @@ func fpolar(cx, cy, r, theta, cw, ch float64) (float64, float64) {
 // legend makes a balanced left and right hand legend
 func legend(deck *generate.Deck, data []ChartData, orientation string, rows int, cx, cy, asize, ts float64) {
 	var x, y, xoffset float64
+	var alignment string
 	right := len(data) % rows
 	left := len(data) - right
 	r := ts + 1.0
 	leading := ts * 5.5
 
+	alignment = "l"
 	switch orientation {
 	case "tb":
 		x = cx - asize - lpadding
@@ -867,7 +869,7 @@ func legend(deck *generate.Deck, data []ChartData, orientation string, rows int,
 	for i := 0; i < left; i++ {
 		label := data[i].label
 		deck.Circle(x, y, r, data[i].note)
-		legendlabel(deck, label, x+xoffset, y, ts)
+		legendlabel(deck, label, alignment, x+xoffset, y, ts)
 		y -= leading
 	}
 	// right/bottom legend
@@ -875,31 +877,46 @@ func legend(deck *generate.Deck, data []ChartData, orientation string, rows int,
 	case "tb":
 		x = cx + asize + lpadding
 		y = cy + lpadding
-		xoffset = -20.0
+		xoffset = -3
+		alignment = "e"
 	case "lr":
 		x = cx - r
-		y = cy - (asize * 0.8)
+		y = cy - (asize * 0.6)
 	}
 	for i := left; i < len(data); i++ {
 		label := data[i].label
 		deck.Circle(x, y, r, data[i].note)
-		legendlabel(deck, label, x+xoffset, y, ts)
+		legendlabel(deck, label, alignment, x+xoffset, y, ts)
 		y -= leading
 	}
 }
 
 // legendlabel lays out the legend labels for fan and bowtie charts
-func legendlabel(deck *generate.Deck, s string, x, y, ts float64) {
+func legendlabel(deck *generate.Deck, s, alignment string, x, y, ts float64) {
 	w := strings.Split(s, `\n`)
 	lw := len(w)
 	if lw == 1 {
-		deck.Text(x, y-(ts/3), s, "sans", ts, "")
+		showtext(deck, x, y-(ts/3), ts, s, alignment)
 	} else {
 		y = y + (ts * (float64(lw / 3)))
 		for i := 0; i < lw; i++ {
-			deck.Text(x, y, w[i], "sans", ts, "")
+			showtext(deck, x, y, ts, w[i], alignment)
 			y -= (ts * 1.8)
 		}
+	}
+}
+
+// showtext places text beginning center, or end
+func showtext(deck *generate.Deck, x, y, ts float64, s, align string) {
+	switch align {
+	case "l", "b":
+		deck.Text(x, y, s, "sans", ts, "")
+	case "r", "e":
+		deck.TextEnd(x, y, s, "sans", ts, "")
+	case "c", "m":
+		deck.TextEnd(x, y, s, "sans", ts, "")
+	default:
+		deck.Text(x, y, s, "sans", ts, "")
 	}
 }
 
