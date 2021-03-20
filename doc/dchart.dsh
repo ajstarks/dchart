@@ -126,6 +126,19 @@ deck
  		elist
 	eslide
 
+	slide
+		ctext "dchart API" 50 top titlesize
+		//list 5 80 2 "mono"
+	//		li "NewChart(chartype string, top, bottom, left, right float64) => settings"
+	//		li "settings.[thing] = ..."
+	//		li "settings.GenerateChart(deck *generate.Deck, io.ReadCloser)" 
+	//	elist
+	hline 2 50 55 60 cmdcolor 7
+	textfile "code/barchart.gocode" 5 85 1.6 "mono"
+	//dchart -textsize=1 -left 65 -top 70 -right 90 -bottom 50 -val=f -xlabel=2 code/AAPL.d
+	image "images/api.png" 78 50 2568 1982 12
+	eslide
+
 	// dchart with decksh
 	slide
 		ctext    "Using dchart with decksh"   50 top titlesize

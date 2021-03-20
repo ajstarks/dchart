@@ -1,0 +1,26 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/ajstarks/dchart"
+	"github.com/ajstarks/deck/generate"
+)
+
+func main() {
+	chart := dchart.NewFullChart("bar", 0, 0, 0, 0)
+	chart.ShowTitle = true
+	chart.XLabelInterval = 2
+	deck := generate.NewSlides(os.Stdout, 0, 0)
+	deck.StartDeck()
+	for _, f := range os.Args[1:] {
+		r, err := os.Open(f)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+			continue
+		}
+		chart.GenerateChart(deck, r)
+	}
+	deck.EndDeck()
+}
