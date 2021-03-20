@@ -46,8 +46,8 @@ deck
 
 		dchart topts -pmap   -pwidth=2                        -top=30  c1 code/browser2.d
 		dchart topts -pgrid  -ls=1.5 -val=f                   -top=32  c2 code/incar.d
-		dchart topts -donut  -psize=9 -pwidth=1 -color=std    -top=27 -left=62  code/browser.d
-		dchart topts -radial -psize=2 -pwidth=8               -top=27 -left=88  code/count.d
+		dchart -title=f -textsize=1.5 -lego                   -top=32  c3 code/incar.d
+		dchart topts -donut  -psize=9 -pwidth=1 -color=std    -top=30 -left=83  code/browser.d
 
 		ts=2
 		tr=65
@@ -56,15 +56,24 @@ deck
 		text "Word Bar"           55 tr ts
 		text "Slope"              80 tr ts
 		tr-=23
-		text "Scatter"             5  tr ts
+		text "Scatter"            5  tr ts
 		text "Dot"                30 tr ts
 		text "Line"               55 tr ts
 		text "Area"               80 tr ts
 		tr-=37
 		text "Proportional Map"  5  tr ts
 		text "Proportonal Grid"  30 tr ts
-		text "Donut/Pie"         55 tr ts
-		text "Radial"            80 tr ts
+		text "Lego"              55 tr ts
+		text "Donut/Pie"         80 tr ts
+	eslide
+
+	slide
+		dchart -textsize=1.5  -radial -psize=5 -pwidth=10 -top=50 -left=20 code/count.d
+		dchart topts  -fan   -psize=10 -left=60 -top=80 code/occupation.d
+		dchart topts -bowtie -psize=10 -left=60 -top=30 code/occupation.d
+		ctext "Radial"           20 25 ts
+		ctext "Fan"              60 57 ts
+		ctext "Bowtie"           60 7 ts
 	eslide
 
 	// data
@@ -726,16 +735,16 @@ deck
 	eslide
 
 	// bowtie
-	slide bgcolor textcolor
-		dchart opts -val=t -psize=20 -top=60 -bowtie  code/occupation.d
-		ctext "Bowtie chart" cap1x cap1y capsize
+	slide bgcolor
+		dchart opts  -val=t -psize=20 -top=60 -bowtie  code/occupation.d
+		ctext "Bowtie chart" cap1x cap1y capsize "sans" textcolor
 		ctext "dchart -val=t -psize=20 -top=60 -bowtie  occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 
 	// fan
-	slide bgcolor textcolor
-		dchart opts -val=t -psize=20 -top=60 -fan code/occupation.d
-		ctext "Fan chart" cap1x cap1y capsize
+	slide bgcolor
+		dchart opts  -val=t -psize=20 -top=60 -fan code/occupation.d
+		ctext "Fan chart" cap1x cap1y capsize "sans" textcolor
 		ctext "dchart -val=t -psize=20 -top=60 -fan occupation.d" cap1x cap2y cmdsize "mono" cmdcolor
 	eslide
 edeck
