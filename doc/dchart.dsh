@@ -22,6 +22,7 @@ deck
 
 	// chart types
 	slide
+		ctext     "Chart Types" 50 93 titlesize
 		topts="-fulldeck=f -title=f -textsize=0.75"
 		r1="-top=90 -bottom=70"
 		r2="-top=57 -bottom=45"
@@ -68,11 +69,12 @@ deck
 	eslide
 
 	slide
+		ctext     "Chart Types (continued)" 50 top titlesize
 		dchart -textsize=1.5  -radial -psize=5 -pwidth=10 -top=50 -left=20 code/count.d
-		dchart topts  -fan   -psize=10 -left=60 -top=80 code/occupation.d
+		dchart topts  -fan   -psize=10 -left=60 -top=75 code/occupation.d
 		dchart topts -bowtie -psize=10 -left=60 -top=30 code/occupation.d
 		ctext "Radial"           20 25 ts
-		ctext "Fan"              60 57 ts
+		ctext "Fan"              60 52 ts
 		ctext "Bowtie"           60 7 ts
 	eslide
 
@@ -126,17 +128,64 @@ deck
  		elist
 	eslide
 
+	// API
 	slide
 		ctext "dchart API" 50 top titlesize
-		//list 5 80 2 "mono"
-	//		li "NewChart(chartype string, top, bottom, left, right float64) => settings"
-	//		li "settings.[thing] = ..."
-	//		li "settings.GenerateChart(deck *generate.Deck, io.ReadCloser)" 
-	//	elist
-	hline 2 50 55 60 cmdcolor 7
-	textfile "code/barchart.gocode" 5 85 1.6 "mono"
+		list 5 80 2 "mono"
+			li "NewChart(chartype string, top, bottom, left, right float64) => settings"
+			li "settings.[thing] = ..."
+			li "settings.GenerateChart(deck *generate.Deck, io.ReadCloser)" 
+		elist
+
+		list 20 60 1.5 "mono"
+			li "[]ChartData"
+			li "Settings"
+			li ""
+			li "Getdata(r io.ReadCloser, readcsv bool, cols string) ([]ChartData,float64,float64,string)"
+			li "TSVdata(r io.ReadCloser) ([]ChartData, float64, float64, string)"
+			li "CSVdata(r io.ReadCloser, csvcols string) ([]ChartData, float64, float64, string)"
+			li ""
+			li "NewChart(chartType string, top, bottom, left, right float64) Settings"
+			li "NewFullChart(chartType string, top, bottom, left, right float64) Settings"
+			li "(s *Settings) GenerateChart(deck *generate.Deck, r io.ReadCloser)"
+			//li "(s *Settings) Hchart(deck *generate.Deck, r io.ReadCloser)"
+			//li "(s *Settings) Pchart(deck *generate.Deck, r io.ReadCloser)"
+			//li "(s *Settings) Slopechart(deck *generate.Deck, r io.ReadCloser)"
+			//li "(s *Settings) Vchart(deck *generate.Deck, r io.ReadCloser)"
+			//li "(s *Settings) Wbchart(deck *generate.Deck, r io.ReadCloser)"
+			li "(s *Settings) Write(w io.Writer, r io.ReadCloser)"
+		elist
+		list 5 60 1.5
+			li "Chart Data"
+			li "Chart Settings"
+			li ""
+			li "Read CSV or TSV"
+			li "Read TSV"
+			li "Read CSV"
+			li ""
+			li "Defne a Chart"
+			li "Define Standalone"
+			li "Make Chart"
+
+			//li "Horizontal Chart"
+			//li "Proportional Chart"
+			//li "Slope Chart"
+			//li "Vertical Chart"
+			//li "Word Bar"
+			li "Write the Chart"
+		elist
+
+		
+	eslide
+
+	// Example Program
+	slide
+	ctext "Example Program" 50 top titlesize
+	hline 2 45 55 60 cmdcolor 7
+	textfile "code/barchart.gocode" 5 80 1.6 "mono"
 	//dchart -textsize=1 -left 65 -top 70 -right 90 -bottom 50 -val=f -xlabel=2 code/AAPL.d
 	image "images/api.png" 78 50 2568 1982 12
+	text "go run main.go | pdf" 65 75 2 "mono" "rgb(100,100,100)"
 	eslide
 
 	// dchart with decksh
