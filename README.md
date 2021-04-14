@@ -1,7 +1,59 @@
 # dchart - charts for deck
 
-```dchart``` generates deck markup for bar, line, scatter, dot, volume, donut and proportional charts, reading data from the standard input or specified files. 
-Unless specified otherwise, each input source generates a slide in the deck.
+The dchart package generates ```deck``` markup for various chart types, reading from an ```io.ReadCloser``` and writing to 
+an ```io.Writer```.  The chart types and attributes defined by manipulating settings.
+
+## API
+
+	NewChart(chartype string, top, bottom, left, right float64) => settings
+	settings.[thing] = ...
+	settings.GenerateChart(deck *generate.Deck, io.ReadCloser)
+
+	Chart Data		[]ChartData
+	Chart Settings	Settings
+
+	Read CSV or TSV 	Getdata(r io.ReadCloser, readcsv bool, cols string) ([]ChartData,float64,float64,string)
+	Read TSV 			TSVdata(r io.ReadCloser) ([]ChartData, float64, float64, string)
+	Read CSV 			CSVdata(r io.ReadCloser, csvcols string) ([]ChartData, float64, float64, string)
+	Defne a Chart 		NewChart(chartType string, top, bottom, left, right float64) Settings
+	Define Standalone 	NewFullChart(chartType string, top, bottom, left, right float64) Settings
+	Make Chart 			(s *Settings) GenerateChart(deck *generate.Deck, r io.ReadCloser)
+	Write the Chart 	(s *Settings) Write(w io.Writer, r io.ReadCloser)
+
+## Example Client
+
+	package main
+	import (
+		"fmt"
+		"os"
+		"github.com/ajstarks/dchart"
+		"github.com/ajstarks/deck/generate"
+	)
+	func main() {
+		chart := dchart.NewFullChart("bar", 0, 0, 0, 0)
+		chart.ShowTitle = true
+		chart.XLabelInterval = 2
+		deck := generate.NewSlides(os.Stdout, 0, 0)
+		deck.StartDeck()
+		for _, f := range os.Args[1:] {
+			r, err := os.Open(f)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
+				continue
+			}
+			chart.GenerateChart(deck, r)
+		}
+		deck.EndDeck()
+	}
+
+creates this chart.
+
+![example output](a.png)
+
+
+## Command line client
+
+```cmd/dchart``` is the command line tool for ```dchart```. It generates deck markup for bar, line, scatter, dot, volume, donut, proportional  and fan charts, reading data from the standard input or specified files. Unless specified otherwise, each input source generates a slide in the deck.
 
 The input data format a tab-separated or CSV formatted list of ```label,data``` pairs where label is an arbitrary string, 
 and data is intepreted as a floating point value. 
