@@ -10,6 +10,91 @@ import (
 	"github.com/ajstarks/deck/generate"
 )
 
+var usageMsg = `
+dchart [options] file..
+
+Options categories with defaults and descriptions:
+
+Chart Types
+.......................................................................
+-bar        true                      bar chart
+-wbar       false                     word bar chart
+-hbar       false                     horizontal bar chart
+-donut      false                     donut chart
+-dot        false                     dot chart
+-lego       false                     lego chart
+-line       false                     line chart
+-pgrid      false                     proportional grid
+-pmap       false                     proportional map
+-bowtie     false                     bowtie chart
+-fan        false                     fan chart
+-radial     false                     radial chart
+-scatter    false                     scatter chart
+-slope      false                     slope chart
+-vol        false                     volume (area) chart
+
+
+Chart Elements
+.......................................................................
+-csv        false                     read CSV files
+-frame      false                     show a colored frame
+-fulldeck   true                      generate full deck markup
+-grid       false                     show gridlines on the y axis
+-note       true                      show annotations
+-pct        false                     show computed percentage
+-rline      false                     show a regression line
+-solidpmap  false                     show solid pmap colors
+-spokes     false                     show spokes in radial chart
+-title      true                      show the title
+-val        true                      show values
+-xlast      false                     show the last x label
+-xstagger   false                     stagger x axis labels
+-yaxis      false                     show a y axis
+-chartitle  override title in data    specify the title
+-datacond   low,high,colors           conditional data colors
+-hline      value,label2              label horizontal line at value
+-valpos     t=top, b=bottom, m=middle value position
+-xlabel     default=1, 0 to suppress  x axis label interval
+-yrange     min,max.step              specify the y axis label range
+
+
+Position and Scaling
+.......................................................................
+-top        80                        top of the chart
+-bottom     30                        bottom of the chart
+-left       20                        left margin
+-right      80                        right margin
+-min        data min                  set the minimum data value
+-max        data max                  set the maximum data value
+
+
+Measures and Attributes
+.......................................................................
+-bgcolor    white                     background color
+-barwidth   computed from data size   barwidth
+-color      lightsteelblue            data color
+-csvcol     labe1,label2              specify csv columns
+-datafmt    %.1f                      data format for values
+-dmin       false                     use data minimum, not zero
+-framecolor rgb(127,127,127)          frame color
+-lcolor     rgb(75,75,75)             label color
+-linewidth  0.20                      linewidth
+-ls         2.4                       linespacing
+-noteloc    c=center, r=right, l=left annotation location
+-pmlen      20                        pmap label length
+-psize      30                        diameter of the donut
+-pwidth     30                        width of the donut or pmap
+-rlcolor    rgb(127,0,0)              regression line color
+-textsize   1.50                      text size
+-xlabrot    0                         xlabel rotation (deg.)
+-vcolor     rgb(127,0,0)              value color
+-volop      50                        volume opacity %
+`
+
+func printusage() {
+	fmt.Fprintln(flag.CommandLine.Output(), usageMsg)
+}
+
 func cmdflags() dchart.Settings {
 	var chart dchart.Settings
 
@@ -80,6 +165,7 @@ func cmdflags() dchart.Settings {
 	flag.StringVar(&chart.HLine, "hline", "", "horizontal line value,label")
 	flag.StringVar(&chart.NoteLocation, "noteloc", "c", "note location (c-center, r-right aligned, l-left aligned)")
 	flag.StringVar(&chart.DataCondition, "datacond", "", "data condition: low,high,color")
+	flag.Usage = printusage
 	flag.Parse()
 
 	return chart
