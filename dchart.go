@@ -3,6 +3,7 @@ package dchart
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/csv"
 	"fmt"
 	"io"
@@ -366,6 +367,38 @@ func (s *Settings) yaxis(deck *generate.Deck, x, dmin, dmax float64) {
 	}
 }
 
+// commaf returns a string from a floating point value using
+// commas to separate thousands.
+// (from https://github.com/dustin/go-humanize/blob/master/comma.go)
+func commaf(v float64) string {
+	buf := &bytes.Buffer{}
+	if v < 0 {
+		buf.Write([]byte{'-'})
+		v = 0 - v
+	}
+
+	comma := []byte{','}
+
+	parts := strings.Split(strconv.FormatFloat(v, 'f', -1, 64), ".")
+	pos := 0
+	if len(parts[0])%3 != 0 {
+		pos += len(parts[0]) % 3
+		buf.WriteString(parts[0][:pos])
+		buf.Write(comma)
+	}
+	for ; pos < len(parts[0]); pos += 3 {
+		buf.WriteString(parts[0][pos : pos+3])
+		buf.Write(comma)
+	}
+	buf.Truncate(buf.Len() - 1)
+
+	if len(parts) > 1 {
+		buf.Write([]byte{'.'})
+		buf.WriteString(parts[1])
+	}
+	return buf.String()
+}
+
 // dformat returns the string representation of a float64
 // according to the datafmt flag value.
 // if there is no fractional portion of the float64, override the flag and
@@ -373,6 +406,9 @@ func (s *Settings) yaxis(deck *generate.Deck, x, dmin, dmax float64) {
 func dformat(datafmt string, x float64) string {
 
 	if datafmt != Defaultfmt {
+		if datafmt == "%," {
+			return commaf(x)
+		}
 		return fmt.Sprintf(datafmt, x)
 	}
 
