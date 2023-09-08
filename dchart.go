@@ -370,7 +370,7 @@ func (s *Settings) yaxis(deck *generate.Deck, x, dmin, dmax float64) {
 // commaf returns a string from a floating point value using
 // commas to separate thousands.
 // (from https://github.com/dustin/go-humanize/blob/master/comma.go)
-func commaf(v float64) string {
+func commaf(v float64, prec int) string {
 	buf := &bytes.Buffer{}
 	if v < 0 {
 		buf.Write([]byte{'-'})
@@ -379,7 +379,7 @@ func commaf(v float64) string {
 
 	comma := []byte{','}
 
-	parts := strings.Split(strconv.FormatFloat(v, 'f', -1, 64), ".")
+	parts := strings.Split(strconv.FormatFloat(v, 'f', prec, 64), ".")
 	pos := 0
 	if len(parts[0])%3 != 0 {
 		pos += len(parts[0]) % 3
@@ -406,8 +406,12 @@ func commaf(v float64) string {
 func dformat(datafmt string, x float64) string {
 
 	if datafmt != Defaultfmt {
-		if datafmt == "%," {
-			return commaf(x)
+		if strings.HasPrefix(datafmt, "%,") {
+			if len(datafmt) > 2 {
+				prec, _ := strconv.Atoi(datafmt[2:])
+				return commaf(x, prec)
+			}
+			return commaf(x, -1)
 		}
 		return fmt.Sprintf(datafmt, x)
 	}
