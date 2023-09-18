@@ -74,7 +74,7 @@ Measures and Attributes
 -barwidth   computed from data size   barwidth
 -color      lightsteelblue            data color
 -csvcol     labe1,label2              specify csv columns
--datafmt    %.1f                      data format for values
+-datafmt    %.1f                      format for values (%f or %,)
 -dmin       false                     use data minimum, not zero
 -framecolor rgb(127,127,127)          frame color
 -lcolor     rgb(75,75,75)             label color
