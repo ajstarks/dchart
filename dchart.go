@@ -92,6 +92,7 @@ type Measures struct {
 	UserMax,
 	VolumeOpacity,
 	XLabelRotation float64
+	Boundary string
 	XLabelInterval,
 	PMapLength int
 }
@@ -462,6 +463,36 @@ func parsecondition(s string) (float64, float64, string, error) {
 		return smallest, largest, "", err
 	}
 	return low, high, cs[2], nil
+}
+
+// parsebounds returns the boundary (left, right, top, bottom) of a
+// comma-separated list
+func Parsebounds(s string) (float64, float64, float64, float64) {
+
+	var err error
+	var left, right, top, bottom float64
+
+	bounds := strings.Split(s, ",")
+	if len(bounds) != 4 {
+		return 0, 0, 0, 0
+	}
+	left, err = strconv.ParseFloat(strings.TrimSpace(bounds[0]), 64)
+	if err != nil {
+		left = 0
+	}
+	right, err = strconv.ParseFloat(strings.TrimSpace(bounds[1]), 64)
+	if err != nil {
+		right = 0
+	}
+	top, err = strconv.ParseFloat(strings.TrimSpace(bounds[2]), 64)
+	if err != nil {
+		top = 0
+	}
+	bottom, err = strconv.ParseFloat(strings.TrimSpace(bounds[3]), 64)
+	if err != nil {
+		bottom = 0
+	}
+	return left, right, top, bottom
 }
 
 // pgrid makes a proportional grid with the specified rows and columns

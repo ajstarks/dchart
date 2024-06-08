@@ -60,12 +60,13 @@ Chart Elements
 
 Position and Scaling
 .......................................................................
--top        80                        top of the chart
--bottom     30                        bottom of the chart
 -left       20                        left margin
 -right      80                        right margin
+-top        80                        top of the chart
+-bottom     30                        bottom of the chart
 -min        data min                  set the minimum data value
 -max        data max                  set the maximum data value
+-bounds     ""                        set left,right,top,bottom
 
 
 Measures and Attributes
@@ -117,6 +118,7 @@ func cmdflags() dchart.Settings {
 	flag.Float64Var(&chart.XLabelRotation, "xlabrot", 0, "xlabel rotation (degrees)")
 	flag.IntVar(&chart.XLabelInterval, "xlabel", 1, "x axis label interval (show every n labels, 0 to show no labels)")
 	flag.IntVar(&chart.PMapLength, "pmlen", 20, "pmap label length")
+	flag.StringVar(&chart.Boundary, "bounds", "", "chart boundary (left,right,top,bottom)")
 
 	// Flags (On/Off)
 	flag.BoolVar(&chart.ShowBar, "bar", true, "show a bar chart")
@@ -167,6 +169,9 @@ func cmdflags() dchart.Settings {
 	flag.StringVar(&chart.DataCondition, "datacond", "", "data condition: low,high,color")
 	flag.Usage = printusage
 	flag.Parse()
+	if len(chart.Boundary) > 0 {
+		chart.Left, chart.Right, chart.Top, chart.Bottom = dchart.Parsebounds(chart.Boundary)
+	}
 
 	return chart
 }
