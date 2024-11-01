@@ -837,7 +837,7 @@ func (s *Settings) pmap(deck *generate.Deck, data []ChartData, title string) {
 		if s.Flags.ShowValues {
 			deck.TextMid(x+(bx/2), ty-pwidth, dformat(df, data[i].value), "mono", ts/2, s.Attributes.ValueColor)
 		}
-		deck.TextMid(x+(bx/2), ty+(pwidth), data[i].label, "sans", ts*0.75, textcolor)
+		deck.TextMid(x+(bx/2), ty+(pwidth), data[i].label, "sans", ts*0.75, s.LabelColor)
 		deck.TextMid(x+(bx/2), ty-(ts/2), fmt.Sprintf(df+"%%", p), "sans", ts, textcolor)
 
 		x += bx - hspace
