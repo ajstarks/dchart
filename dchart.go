@@ -1165,12 +1165,35 @@ func (s *Settings) Wbchart(deck *generate.Deck, r io.ReadCloser) {
 		sum = datasum(bardata)
 	}
 
+	// check for conditional data
+	var clow, chigh float64
+	var cerr error
+	var condcolor string
+	datacond := s.Attributes.DataCondition
+	if len(datacond) > 0 {
+		clow, chigh, condcolor, cerr = parsecondition(datacond)
+		if cerr != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", cerr)
+			return
+		}
+	}
+
 	// for every name, value pair, make the chart
 	y := top
 	labelcolor, datacolor, valuecolor := s.Attributes.LabelColor, s.Attributes.DataColor, s.Attributes.ValueColor
+	defcolor := datacolor
 	for _, data := range bardata {
 		deck.Text(left+hts, y, data.label, "sans", ts, labelcolor)
 		bv := vmap(data.value, mindata, maxdata, left, right)
+
+		if len(datacond) > 0 {
+			if data.value <= chigh && data.value >= clow {
+				datacolor = condcolor
+			} else {
+				datacolor = defcolor
+			}
+		}
+
 		deck.Line(left+hts, y+hts, bv, y+hts, ts*1.5, datacolor, wbop)
 		if s.Flags.ShowValues {
 			df := s.Attributes.DataFmt
