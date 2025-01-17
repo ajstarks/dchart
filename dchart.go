@@ -1215,6 +1215,7 @@ func (s *Settings) Hchart(deck *generate.Deck, r io.ReadCloser) {
 	valuecolor := s.Attributes.ValueColor
 	datacolor := s.Attributes.DataColor
 	labelcolor := s.Attributes.LabelColor
+	defcolor := datacolor
 
 	if f.FullDeck {
 		deck.StartSlide(bgcolor)
@@ -1234,6 +1235,19 @@ func (s *Settings) Hchart(deck *generate.Deck, r io.ReadCloser) {
 		sum = datasum(bardata)
 	}
 
+	// check for conditional data
+	var clow, chigh float64
+	var cerr error
+	var condcolor string
+	datacond := s.Attributes.DataCondition
+	if len(datacond) > 0 {
+		clow, chigh, condcolor, cerr = parsecondition(datacond)
+		if cerr != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", cerr)
+			return
+		}
+	}
+
 	// for every name, value pair, make the chart
 	y := top
 
@@ -1241,6 +1255,15 @@ func (s *Settings) Hchart(deck *generate.Deck, r io.ReadCloser) {
 		label := nlmap.Replace(data.label) // replace '\n' with spaces
 		deck.TextEnd(left-hts, y+(hts/2), label, "sans", ts, labelcolor)
 		bv := vmap(data.value, mindata, maxdata, left, right)
+
+		if len(datacond) > 0 {
+			if data.value <= chigh && data.value >= clow {
+				datacolor = condcolor
+			} else {
+				datacolor = defcolor
+			}
+		}
+
 		if f.ShowDot {
 			dottedhline(deck, left, y+hts, bv-left, ts/5, 1, 0.25, Dotlinecolor)
 			deck.Circle(bv, y+hts, mts, datacolor)
