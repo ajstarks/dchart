@@ -1,7 +1,5 @@
 module github.com/ajstarks/dchart
 
-go 1.19
+go 1.25.5
 
-require github.com/ajstarks/deck/generate v0.0.0-20210309230005-c3f852c02e19
-
-require github.com/ajstarks/deck v0.0.0-20210309230005-c3f852c02e19 // indirect
+require github.com/ajstarks/deckgen v0.0.0-20260106212215-aff83138f9fa
