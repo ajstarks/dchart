@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/ajstarks/dchart"
-	"github.com/ajstarks/deck/generate"
+	generate "github.com/ajstarks/deckgen"
 )
 
 var usageMsg = `

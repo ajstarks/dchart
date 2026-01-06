@@ -27,7 +27,7 @@ an ```io.Writer```.  The chart types and attributes defined by manipulating sett
 		"fmt"
 		"os"
 		"github.com/ajstarks/dchart"
-		"github.com/ajstarks/deck/generate"
+		generate "github.com/ajstarks/deck/deckgen"
 	)
 	func main() {
 		chart := dchart.NewFullChart("bar", 0, 0, 0, 0)
