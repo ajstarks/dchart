@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/ajstarks/dchart"
-	generate "github.com/ajstarks/deckgen"
+	"github.com/ajstarks/deckgen"
 )
 
 var usageMsg = `
@@ -179,7 +179,7 @@ func main() {
 	chart := cmdflags()
 	fulldeck := chart.Flags.FullDeck
 
-	deck := generate.NewSlides(os.Stdout, 0, 0)
+	deck := deckgen.NewSlides(os.Stdout, 0, 0)
 	if fulldeck {
 		deck.StartDeck()
 	}

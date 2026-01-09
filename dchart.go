@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	generate "github.com/ajstarks/deckgen"
+	"github.com/ajstarks/deckgen"
 )
 
 // ChartData defines the name,value pairs
@@ -298,7 +298,7 @@ func TSVdata(r io.ReadCloser) ([]ChartData, float64, float64, string) {
 
 // dottedvline makes dotted vertical line, using circles,
 // with specified step
-func dottedvline(d *generate.DeckGen, x, y1, y2, dotsize, step float64, color string) {
+func dottedvline(d *deckgen.DeckGen, x, y1, y2, dotsize, step float64, color string) {
 
 	if y1 < y2 { // positive
 		for y := y1; y <= y2; y += step {
@@ -313,7 +313,7 @@ func dottedvline(d *generate.DeckGen, x, y1, y2, dotsize, step float64, color st
 
 // dottedhline makes a dotted horizontal line, using circles,
 // with specified step and separation
-func dottedhline(d *generate.DeckGen, x, y, width, height, step, space float64, color string) {
+func dottedhline(d *deckgen.DeckGen, x, y, width, height, step, space float64, color string) {
 	for xp := x; xp < x+width; xp += step {
 		d.Circle(xp, y, height, color)
 		xp += space
@@ -341,7 +341,7 @@ func cyrange(min, max float64, n int) (float64, float64, float64) {
 }
 
 // yaxis constructs y axis labels
-func (s *Settings) yaxis(deck *generate.DeckGen, x, dmin, dmax float64) {
+func (s *Settings) yaxis(deck *deckgen.DeckGen, x, dmin, dmax float64) {
 	var axismin, axismax, step float64
 	if s.Attributes.YAxisR == "" {
 		axismin, axismax, step = cyrange(dmin, dmax, 5)
@@ -496,7 +496,7 @@ func Parsebounds(s string) (float64, float64, float64, float64) {
 }
 
 // pgrid makes a proportional grid with the specified rows and columns
-func (s *Settings) pgrid(deck *generate.DeckGen, data []ChartData, title string, rows, cols int) {
+func (s *Settings) pgrid(deck *deckgen.DeckGen, data []ChartData, title string, rows, cols int) {
 
 	ls := s.Measures.LineSpacing
 	ts := s.Measures.TextSize
@@ -565,7 +565,7 @@ func (s *Settings) pgrid(deck *generate.DeckGen, data []ChartData, title string,
 }
 
 // dotgrid makes a grid 10x10 grid of dots colored by value
-func dotgrid(deck *generate.DeckGen, x, y, left, step float64, n int, fillcolor string) (float64, float64) {
+func dotgrid(deck *deckgen.DeckGen, x, y, left, step float64, n int, fillcolor string) (float64, float64) {
 	edge := (((step * 0.3) + step) * 7) + left
 	for i := 0; i < n; i++ {
 		if x > edge {
@@ -580,7 +580,7 @@ func dotgrid(deck *generate.DeckGen, x, y, left, step float64, n int, fillcolor 
 }
 
 // lego makes lego charts (a variation of pgrid)
-func (s *Settings) lego(deck *generate.DeckGen, data []ChartData, title string) {
+func (s *Settings) lego(deck *deckgen.DeckGen, data []ChartData, title string) {
 	left := s.Measures.Left
 	x := left
 	y := s.Measures.Top
@@ -626,7 +626,7 @@ func cpolar(x, y, r, t, w, h float64) (float64, float64) {
 }
 
 // spokes draws the points and lines like spokes on a wheel
-func spokes(deck *generate.DeckGen, cx, cy, r, spokesize, w, h float64, n int, color string) {
+func spokes(deck *deckgen.DeckGen, cx, cy, r, spokesize, w, h float64, n int, color string) {
 	t := topclock
 	step := fullcircle / float64(n)
 	for i := 0; i < n; i++ {
@@ -638,7 +638,7 @@ func spokes(deck *generate.DeckGen, cx, cy, r, spokesize, w, h float64, n int, c
 }
 
 // radial draws a radial plot
-func (s *Settings) radial(deck *generate.DeckGen, data []ChartData, title string, maxd float64) {
+func (s *Settings) radial(deck *deckgen.DeckGen, data []ChartData, title string, maxd float64) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	pwidth := s.Measures.PWidth
@@ -696,7 +696,7 @@ func (s *Settings) radial(deck *generate.DeckGen, data []ChartData, title string
 }
 
 // Slopechart draws a slope chart
-func (s *Settings) Slopechart(deck *generate.DeckGen, r io.ReadCloser) {
+func (s *Settings) Slopechart(deck *deckgen.DeckGen, r io.ReadCloser) {
 	data, mindata, maxdata, title := Getdata(r, s.Flags.ReadCSV, s.Attributes.CSVCols)
 	if len(data) < 2 {
 		fmt.Fprintf(os.Stderr, "slope graphs need at least two data points")
@@ -796,7 +796,7 @@ func (s *Settings) Slopechart(deck *generate.DeckGen, r io.ReadCloser) {
 }
 
 // pmap draws a porpotional map
-func (s *Settings) pmap(deck *generate.DeckGen, data []ChartData, title string) {
+func (s *Settings) pmap(deck *deckgen.DeckGen, data []ChartData, title string) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	right := s.Measures.Right
@@ -859,7 +859,7 @@ func stdcolor(i int, dcolor, color string, op float64, solid bool) (string, floa
 }
 
 // donut makes a donut chart
-func (s *Settings) donut(deck *generate.DeckGen, data []ChartData, title string) {
+func (s *Settings) donut(deck *deckgen.DeckGen, data []ChartData, title string) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	psize := s.Measures.PSize
@@ -918,7 +918,7 @@ func fpolar(cx, cy, r, theta, cw, ch float64) (float64, float64) {
 }
 
 // legend makes a balanced left and right hand legend
-func legend(deck *generate.DeckGen, data []ChartData, orientation string, rows int, cx, cy, asize, ts float64) {
+func legend(deck *deckgen.DeckGen, data []ChartData, orientation string, rows int, cx, cy, asize, ts float64) {
 	var x, y, xoffset float64
 	var alignment string
 	right := len(data) % rows
@@ -963,7 +963,7 @@ func legend(deck *generate.DeckGen, data []ChartData, orientation string, rows i
 }
 
 // legendlabel lays out the legend labels for fan and bowtie charts
-func legendlabel(deck *generate.DeckGen, s, alignment string, x, y, ts float64) {
+func legendlabel(deck *deckgen.DeckGen, s, alignment string, x, y, ts float64) {
 	w := strings.Split(s, `\n`)
 	lw := len(w)
 	if lw == 1 {
@@ -978,7 +978,7 @@ func legendlabel(deck *generate.DeckGen, s, alignment string, x, y, ts float64) 
 }
 
 // showtext places text beginning center, or end
-func showtext(deck *generate.DeckGen, x, y, ts float64, s, align string) {
+func showtext(deck *deckgen.DeckGen, x, y, ts float64, s, align string) {
 	switch align {
 	case "l", "b":
 		deck.Text(x, y, s, "sans", ts, "")
@@ -992,7 +992,7 @@ func showtext(deck *generate.DeckGen, x, y, ts float64, s, align string) {
 }
 
 // arclabel labels the data items
-func arclabel(deck *generate.DeckGen, cx, cy, a1, a2, asize, value, cw, ch, ts float64) {
+func arclabel(deck *deckgen.DeckGen, cx, cy, a1, a2, asize, value, cw, ch, ts float64) {
 	v := strconv.FormatFloat(value, 'f', 1, 64)
 	diff := a2 - a1
 	lx, ly := fpolar(cx, cy, asize*0.9, a1+(diff*0.5), cw, ch)
@@ -1000,7 +1000,7 @@ func arclabel(deck *generate.DeckGen, cx, cy, a1, a2, asize, value, cw, ch, ts f
 }
 
 // wedge makes data wedges
-func wedge(deck *generate.DeckGen, data []ChartData, cx, cy, begAngle, asize, cw, ch, ts float64) {
+func wedge(deck *deckgen.DeckGen, data []ChartData, cx, cy, begAngle, asize, cw, ch, ts float64) {
 	start := begAngle
 	for _, d := range data {
 		m := (d.value / 100) * wingspan
@@ -1013,7 +1013,7 @@ func wedge(deck *generate.DeckGen, data []ChartData, cx, cy, begAngle, asize, cw
 }
 
 // bowtie makes a bowtie chart
-func (s *Settings) bowtie(deck *generate.DeckGen, data []ChartData, title string) {
+func (s *Settings) bowtie(deck *deckgen.DeckGen, data []ChartData, title string) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	asize := s.Measures.PSize
@@ -1048,7 +1048,7 @@ func (s *Settings) bowtie(deck *generate.DeckGen, data []ChartData, title string
 }
 
 // fan makes a fan chart
-func (s *Settings) fan(deck *generate.DeckGen, data []ChartData, title string) {
+func (s *Settings) fan(deck *deckgen.DeckGen, data []ChartData, title string) {
 	top := s.Measures.Top
 	left := s.Measures.Left
 	asize := s.Measures.PSize
@@ -1095,7 +1095,7 @@ func (s *Settings) fan(deck *generate.DeckGen, data []ChartData, title string) {
 }
 
 // Pchart draws proportional data, either a pmap, pgrid, radial or donut using input from a Reader
-func (s *Settings) Pchart(deck *generate.DeckGen, r io.ReadCloser) {
+func (s *Settings) Pchart(deck *deckgen.DeckGen, r io.ReadCloser) {
 	f := s.Flags
 	data, _, maxdata, title := Getdata(r, f.ReadCSV, s.Attributes.CSVCols)
 	chartitle := s.Attributes.ChartTitle
@@ -1127,7 +1127,7 @@ func (s *Settings) Pchart(deck *generate.DeckGen, r io.ReadCloser) {
 }
 
 // Wbchart makes a word bar chart
-func (s *Settings) Wbchart(deck *generate.DeckGen, r io.ReadCloser) {
+func (s *Settings) Wbchart(deck *deckgen.DeckGen, r io.ReadCloser) {
 	left := s.Measures.Left
 	right := s.Measures.Right
 	top := s.Measures.Top
@@ -1212,7 +1212,7 @@ func (s *Settings) Wbchart(deck *generate.DeckGen, r io.ReadCloser) {
 }
 
 // Hchart makes horizontal bar charts using input from a Reader
-func (s *Settings) Hchart(deck *generate.DeckGen, r io.ReadCloser) {
+func (s *Settings) Hchart(deck *deckgen.DeckGen, r io.ReadCloser) {
 	ts := s.Measures.TextSize
 	ls := s.Measures.LineSpacing
 	left := s.Measures.Left
@@ -1316,7 +1316,7 @@ func (s *Settings) Hchart(deck *generate.DeckGen, r io.ReadCloser) {
 
 // Vchart makes charts using input from a Reader
 // the types of charts are bar (column), dot, line, and volume
-func (s *Settings) Vchart(deck *generate.DeckGen, r io.ReadCloser) {
+func (s *Settings) Vchart(deck *deckgen.DeckGen, r io.ReadCloser) {
 	chartdata, mindata, maxdata, title := Getdata(r, s.Flags.ReadCSV, s.Attributes.CSVCols) // getdata(r)
 
 	left := s.Measures.Left
@@ -1596,7 +1596,7 @@ func slope(x, y []float64) (float64, float64) {
 }
 
 // rline makes a regression line
-func (measures *Measures) rline(deck *generate.DeckGen, x, y []float64, mindata, maxdata float64, color string) {
+func (measures *Measures) rline(deck *deckgen.DeckGen, x, y []float64, mindata, maxdata float64, color string) {
 	top := measures.Top
 	left := measures.Left
 	if left < 0 {
@@ -1621,7 +1621,7 @@ func (measures *Measures) rline(deck *generate.DeckGen, x, y []float64, mindata,
 
 // GenerateChart makes charts according to the orientation:
 // horizontal bar or line, bar, dot, or donut volume charts
-func (s *Settings) GenerateChart(deck *generate.DeckGen, r io.ReadCloser) {
+func (s *Settings) GenerateChart(deck *deckgen.DeckGen, r io.ReadCloser) {
 	f := s.Flags
 	switch {
 	case f.ShowHBar:
@@ -1639,7 +1639,7 @@ func (s *Settings) GenerateChart(deck *generate.DeckGen, r io.ReadCloser) {
 
 // Write performs chart I/O
 func (s *Settings) Write(w io.Writer, r io.ReadCloser) {
-	s.GenerateChart(generate.NewSlides(w, 0, 0), r)
+	s.GenerateChart(deckgen.NewSlides(w, 0, 0), r)
 }
 
 // NewFullChart initializes the settings required to make a chart
