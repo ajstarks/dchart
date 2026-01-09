@@ -1,4 +1,4 @@
-// Package dchart - make charts in the deck format
+// Package dchart - make charts in the deck markup
 package dchart
 
 import (
