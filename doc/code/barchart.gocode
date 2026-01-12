@@ -5,14 +5,14 @@ import (
 	"os"
 
 	"github.com/ajstarks/dchart"
-	generate "github.com/ajstarks/deck/deckgen"
+	"github.com/ajstarks/deck/deckgen"
 )
 
 func main() {
 	chart := dchart.NewFullChart("bar", 0, 0, 0, 0)
 	chart.ShowTitle = true
 	chart.XLabelInterval = 2
-	deck := generate.NewSlides(os.Stdout, 0, 0)
+	deck := deckgen.NewSlides(os.Stdout, 0, 0)
 	deck.StartDeck()
 	for _, f := range os.Args[1:] {
 		r, err := os.Open(f)
